@@ -41,9 +41,56 @@ const squad = [
 ];
 
 const picks = [
-  { rank: 1, name: "HELLDIVERS™ 2", match: "93% Match", ready: "93% READY", img: "heroA" },
-  { rank: 2, name: "DEEP ROCK GALACTIC", match: "88% Match", ready: "88% READY", img: "heroB" },
-  { rank: 3, name: "VALHEIM", match: "82% Match", ready: "82% READY", img: "heroC" }
+  {
+    rank: 1,
+    name: "HELLDIVERS™ 2",
+    match: "93% Match",
+    ready: "93% READY",
+    img: "helldivers",
+    art: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=900&q=80",
+    desc: "Co-op PvE chaos met korte missies en veel squad momentum.",
+    mode: "Co-op PvE"
+  },
+  {
+    rank: 2,
+    name: "DEEP ROCK GALACTIC",
+    match: "88% Match",
+    ready: "88% READY",
+    img: "deeprock",
+    art: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=900&q=80",
+    desc: "Mijnbouw, teamwork en paniek in compacte co-op sessies.",
+    mode: "Co-op PvE"
+  },
+  {
+    rank: 3,
+    name: "VALHEIM",
+    match: "82% Match",
+    ready: "82% READY",
+    img: "valheim",
+    art: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80",
+    desc: "Survival, bouwen, boss fights en langlopende squad progressie.",
+    mode: "Survival Co-op"
+  },
+  {
+    rank: 4,
+    name: "PROJECT ZOMBOID",
+    match: "78% Match",
+    ready: "78% READY",
+    img: "zomboid",
+    art: "https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=900&q=80",
+    desc: "Hardcore survival sandbox voor inside jokes en rampzalige plannen.",
+    mode: "Survival PvE"
+  },
+  {
+    rank: 5,
+    name: "RISK OF RAIN 2",
+    match: "86% Match",
+    ready: "86% READY",
+    img: "risk",
+    art: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=900&q=80",
+    desc: "Snelle roguelike runs voor avonden met weinig setup.",
+    mode: "Co-op PvE"
+  }
 ];
 
 export default function App() {
@@ -100,18 +147,31 @@ function SquadRow({ compact = false }) {
 function PickList({ variant = "default", notify }) {
   return (
     <div className={`pickList ${variant}`}>
-      {picks.map(pick => (
+      {picks.slice(0, 3).map(pick => (
         <button key={pick.name} className="pick" onClick={() => notify(`${pick.name} ingepland`)}>
           <b>{pick.rank}</b>
-          <div className={`thumb ${pick.img}`}></div>
+          <div className="thumb" style={{ backgroundImage: `linear-gradient(135deg, rgba(0,0,0,.18), rgba(124,58,237,.28)), url(${pick.art})` }}></div>
           <div>
             <strong>{pick.name}</strong>
-            <span>{pick.match}</span>
+            <span>{pick.match} · {pick.mode}</span>
           </div>
           <em>{pick.ready}</em>
         </button>
       ))}
     </div>
+  );
+}
+
+function GameArtWall({ compact = false }) {
+  return (
+    <section className={compact ? "gameArtWall compact" : "gameArtWall"}>
+      {picks.slice(0, compact ? 3 : 5).map(game => (
+        <article key={game.name} style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.12), rgba(0,0,0,.74)), url(${game.art})` }}>
+          <strong>{game.name}</strong>
+          <span>{game.mode}</span>
+        </article>
+      ))}
+    </section>
   );
 }
 
@@ -155,7 +215,8 @@ function NeonCommand({ notify }) {
         </div>
         <button onClick={() => notify("Smart match gestart")}><ChevronRight /></button>
       </section>
-      <h3 className="label">TONIGHT'S PICKS</h3>
+      <GameArtWall compact />
+      <h3 className="label">TONIGHT\'S PICKS</h3>
       <PickList variant="neonPicks" notify={notify}/>
       <BottomNav />
     </main>
@@ -187,6 +248,7 @@ function SteamDeck({ notify }) {
           </div>
           <button onClick={() => notify("Joined Deep Rock")}>JOIN</button>
         </div>
+        <GameArtWall compact />
         <h3>Play Tonight</h3>
         <PickList variant="deckPicks" notify={notify}/>
       </section>
@@ -207,6 +269,7 @@ function CyberArcade({ notify }) {
         <p>PRESS START</p>
         <Gamepad2 size={46}/>
       </section>
+      <GameArtWall compact />
       <h3 className="arcadeLabel">TOP PICKS</h3>
       <PickList variant="arcadePicks" notify={notify}/>
       <BottomNav />
@@ -227,7 +290,8 @@ function CozyQuest({ notify }) {
         <p>We've got some great ideas</p>
         <button onClick={() => notify("Adventure board geopend")}><ChevronRight /></button>
       </section>
-      <h3>Tonight's Picks</h3>
+      <GameArtWall compact />
+      <h3>Tonight\'s Picks</h3>
       <PickList variant="cozyPicks" notify={notify}/>
       <BottomNav />
     </main>
@@ -246,7 +310,8 @@ function LanParty({ notify }) {
         <h1>WHAT ARE WE<br/>PLAYING TONIGHT?</h1>
         <p>&gt; FIND THE PERFECT GAME</p>
       </section>
-      <h3>TONIGHT'S PICKS</h3>
+      <GameArtWall compact />
+      <h3>TONIGHT\'S PICKS</h3>
       <PickList variant="lanPicks" notify={notify}/>
       <BottomNav />
     </main>
@@ -311,18 +376,18 @@ function CarouselFocus({ notify }) {
       <p>Squad Online</p>
       <SquadRow compact />
       <section className="bigCarousel">
-        {picks.map((pick, i) => (
-          <article key={pick.name} className={i === 0 ? "mainSlide" : ""}>
-            <div className={`thumb ${pick.img}`}></div>
+        {picks.slice(0, 4).map((pick, i) => (
+          <article key={pick.name} className={i === 0 ? "mainSlide" : ""} style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.78)), url(${pick.art})` }}>
             <h1>{pick.name}</h1>
-            <p>{pick.match} · 4 Ready</p>
+            <p>{pick.match} · {pick.mode}</p>
+            <span>{pick.desc}</span>
             <button onClick={() => notify(`${pick.name} joined`)}>JOIN</button>
           </article>
         ))}
       </section>
       <h3>More Great Picks</h3>
       <div className="miniStrip">
-        {picks.map(p => <div key={p.name} className={`thumb ${p.img}`}></div>)}
+        {picks.map(p => <div key={p.name} className="thumb" style={{ backgroundImage: `linear-gradient(135deg, rgba(0,0,0,.18), rgba(124,58,237,.25)), url(${p.art})` }}></div>)}
       </div>
       <BottomNav />
     </main>
@@ -375,6 +440,7 @@ function FullImmersion({ notify }) {
           <button onClick={() => notify("Finding your game")}>FIND YOUR GAME</button>
         </div>
       </section>
+      <GameArtWall compact />
       <section className="immersionSquad">
         <h3>SQUAD ONLINE</h3>
         <SquadRow compact />
