@@ -1686,3 +1686,292 @@ p {
 .theme-minimal .discoverGrid { gap: 8px; }
 .theme-minimal .steamArt { min-height: 130px; }
 .theme-minimal .gameDesc { color: #344054; }
+
+
+/* v0.19 full layout engine */
+.deckHome {
+  display: grid;
+  grid-template-columns: 54px 1fr;
+  gap: 10px;
+}
+.deckRail {
+  position: sticky;
+  top: 82px;
+  height: 340px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--line);
+  display: grid;
+  place-items: center;
+  padding: 12px 0;
+}
+.deckMain { min-width: 0; }
+
+.compactHero {
+  padding: 18px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(0,228,168,.10), rgba(125,92,255,.10)), var(--panel);
+  border: 1px solid var(--line);
+}
+.compactHero h1 { font-size: 23px; }
+.compactHero button {
+  margin-top: 14px;
+  padding: 11px 13px;
+  border-radius: 14px;
+  background: rgba(0,228,168,.14);
+  color: var(--accent2);
+  font-weight: 1000;
+}
+
+.arcadeHero {
+  padding: 24px;
+  border-radius: 18px;
+  text-align: center;
+  border: 2px solid rgba(255,61,242,.65);
+  background: radial-gradient(circle at top, rgba(0,228,168,.22), transparent 35%), rgba(18, 10, 30, .92);
+  box-shadow: 0 0 0 4px rgba(255,61,242,.11);
+}
+.arcadeHero h1 {
+  font-size: 27px;
+  color: #78fff0;
+  text-shadow: 0 0 18px rgba(0,228,168,.6);
+}
+.arcadeHero button {
+  margin-top: 18px;
+  padding: 14px 18px;
+  border-radius: 10px;
+  background: #ff3df2;
+  color: white;
+  font-weight: 1000;
+  letter-spacing: .08em;
+}
+
+.cozyHero {
+  padding: 24px;
+  border-radius: 30px;
+  background: linear-gradient(135deg, rgba(255,214,138,.40), rgba(116,71,39,.45)), var(--panel);
+  border: 1px solid rgba(255,214,138,.22);
+}
+.cozyHero h1 { font-family: Georgia, serif; letter-spacing: -.035em; }
+.cozyHero button {
+  margin-top: 16px;
+  padding: 12px 15px;
+  border-radius: 999px;
+  background: rgba(255,214,138,.18);
+  color: var(--accent2);
+  font-weight: 1000;
+}
+
+.lanPartyHero {
+  padding: 18px;
+  border-radius: 18px;
+  border: 2px solid rgba(255,153,0,.45);
+  background: linear-gradient(135deg, #18140d, #2a2113);
+}
+.lanScreenText {
+  padding: 22px;
+  border-radius: 12px;
+  background: #070805;
+  border: 1px solid rgba(255,153,0,.45);
+  color: #ff9d00;
+  font-weight: 1000;
+  font-size: 24px;
+  letter-spacing: .04em;
+}
+.lanPartyHero button {
+  margin-top: 14px;
+  width: 100%;
+  padding: 13px;
+  border-radius: 12px;
+  background: #ff9d00;
+  color: #130900;
+  font-weight: 1000;
+}
+
+.minimalHero {
+  display: grid;
+  grid-template-columns: 1fr 58px;
+  gap: 12px;
+  align-items: center;
+  padding: 20px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid rgba(12,18,32,.10);
+}
+.minimalHero h1 { font-size: 22px; color: #101522; }
+.minimalHero p { color: #647086; }
+.minimalHero button {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: #101522;
+  color: white;
+  font-size: 24px;
+  font-weight: 1000;
+}
+
+.gridCommand {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.gridCommand > div {
+  padding: 15px;
+  border-radius: 18px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--line);
+}
+.gridCommand .wide { grid-column: 1 / -1; }
+.gridCommand button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(0,228,168,.14);
+  color: var(--accent2);
+  font-weight: 1000;
+}
+
+.carouselFocus {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+}
+.carouselFocus article {
+  min-width: 78%;
+  scroll-snap-align: start;
+  padding: 22px;
+  border-radius: 28px;
+  min-height: 260px;
+  background: linear-gradient(135deg, rgba(125,92,255,.35), rgba(0,228,168,.12)), var(--panel);
+  border: 1px solid var(--line);
+  display: grid;
+  align-content: end;
+}
+.carouselFocus article.focus { min-width: 88%; }
+.carouselFocus span { font-size: 48px; }
+.carouselFocus button {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 999px;
+  background: rgba(0,228,168,.16);
+  color: var(--accent2);
+  font-weight: 1000;
+}
+
+.sideNavLayout {
+  display: grid;
+  grid-template-columns: 82px 1fr;
+  gap: 10px;
+}
+.sideNavLayout aside {
+  position: sticky;
+  top: 82px;
+  height: 420px;
+  border-radius: 20px;
+  padding: 12px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid var(--line);
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+.sideNavLayout aside span, .sideNavLayout aside b {
+  font-size: 11px;
+  font-weight: 900;
+  color: var(--muted);
+}
+.sideNavLayout main { min-width: 0; }
+
+.immersionHero {
+  min-height: 420px;
+  padding: 24px;
+  border-radius: 30px;
+  display: grid;
+  align-content: end;
+  background:
+    linear-gradient(180deg, transparent, rgba(0,0,0,.72)),
+    url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=900&q=80');
+  background-size: cover;
+  background-position: center;
+  border: 1px solid rgba(255,255,255,.16);
+}
+.immersionHero h1 {
+  max-width: 320px;
+  text-shadow: 0 12px 35px rgba(0,0,0,.65);
+}
+.immersionHero button {
+  margin-top: 18px;
+  padding: 14px 17px;
+  border-radius: 12px;
+  background: #f6d28b;
+  color: #1b1308;
+  font-weight: 1000;
+}
+
+/* Additional theme variables for new modes */
+.theme-lanparty {
+  --accent: #ff9d00;
+  --accent2: #ffbe45;
+  --panel: rgba(30, 24, 14, .94);
+  --muted: #c8a76b;
+  --radius: 14px;
+  background:
+    linear-gradient(90deg, rgba(255,157,0,.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(255,157,0,.04) 1px, transparent 1px),
+    #080704;
+  background-size: 18px 18px;
+}
+.theme-lanparty .bottomNav { background: rgba(12,9,4,.94); }
+.theme-lanparty .primaryBtn, .theme-lanparty .wideButton, .theme-lanparty .fab {
+  background: linear-gradient(135deg, #ff9d00, #ffce63);
+  color: #160b00;
+  border-radius: 12px;
+}
+
+.theme-grid {
+  --accent: #36d399;
+  --accent2: #7df7c9;
+  --panel: rgba(7, 22, 25, .94);
+  --radius: 12px;
+}
+.theme-grid .screen { padding-left: 10px; padding-right: 10px; }
+.theme-grid .eventCard, .theme-grid .feedCard, .theme-grid .presencePanel, .theme-grid .availabilityPanel, .theme-grid .card {
+  border-radius: 12px;
+  box-shadow: none;
+}
+.theme-grid .sectionHeader h2 { font-family: monospace; text-transform: uppercase; }
+
+.theme-carousel {
+  --accent: #8b5cf6;
+  --accent2: #00e4a8;
+}
+.theme-carousel .heroCarousel { display: none; }
+.theme-carousel .screen { padding-left: 12px; padding-right: 12px; }
+
+.theme-sidenav {
+  --accent: #7c5cff;
+  --accent2: #9af7d7;
+  --panel: rgba(15, 18, 35, .96);
+}
+.theme-sidenav .bottomNav { display: none; }
+.theme-sidenav .screen { padding-bottom: 28px; }
+
+.theme-immersion {
+  --accent: #d5a85f;
+  --accent2: #f8d58d;
+  --panel: rgba(15, 13, 10, .88);
+  --radius: 18px;
+}
+.theme-immersion .topbar {
+  position: fixed;
+  width: min(100%, 440px);
+  background: linear-gradient(180deg, rgba(0,0,0,.72), transparent);
+  border-bottom: 0;
+}
+.theme-immersion .screen { padding-top: 76px; }
+.theme-immersion .bottomNav {
+  background: linear-gradient(0deg, rgba(0,0,0,.88), transparent);
+  border-top: 0;
+}

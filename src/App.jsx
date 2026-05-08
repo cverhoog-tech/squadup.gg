@@ -309,11 +309,16 @@ const lengthOptions = ["30-60 min", "1-2 uur", "All night", "LAN weekend"];
 
 
 const themeOptions = [
-  { id: "neon", name: "Neon Command", vibe: "Cinematic dashboard met grote hero, glows en premium gaming cards.", unlock: "Default" },
-  { id: "deck", name: "Steam Deck", vibe: "Compacte console layout met bredere kaarten, minder tekstdruk en stevige controls.", unlock: "Level 5" },
-  { id: "arcade", name: "Cyber Arcade", vibe: "Felle arcade-look met chunky buttons, speelse borders en meer energy.", unlock: "10 game nights" },
-  { id: "cozy", name: "Cozy Quest", vibe: "Warme fantasy/social vibe met zachtere panelen, rustige cards en meer overzicht.", unlock: "3 long adventures" },
-  { id: "minimal", name: "Minimal Pro", vibe: "Strakke utility-layout met minder glow, duidelijke lijsten en snelle planning.", unlock: "Productivity mode" }
+  { id: "neon", name: "Neon Command", vibe: "Futuristic dashboard met grote statusblokken en glow-heavy cards.", unlock: "Default" },
+  { id: "deck", name: "Steam Deck", vibe: "Console-first layout met side rail, compacte cards en focus op controls.", unlock: "Level 5" },
+  { id: "arcade", name: "Cyber Arcade", vibe: "Retro neon, chunky panels en arcade-achtige call-to-actions.", unlock: "10 game nights" },
+  { id: "cozy", name: "Cozy Quest", vibe: "Warme fantasy-card layout met rustiger tempo en adventure gevoel.", unlock: "3 long adventures" },
+  { id: "lanparty", name: "LAN Party", vibe: "Retro hardware dashboard met amber UI, terminal panels en LAN energy.", unlock: "LAN event" },
+  { id: "minimal", name: "Minimal Pro", vibe: "Strakke lichte utility layout met snelle planning en weinig afleiding.", unlock: "Productivity mode" },
+  { id: "grid", name: "Grid Command", vibe: "Tactische grid layout met statuspanelen, mission control en data-overzicht.", unlock: "Squad level 8" },
+  { id: "carousel", name: "Carousel Focus", vibe: "Media-first home met grote game carousel en visuele discovery.", unlock: "Discovery streak" },
+  { id: "sidenav", name: "Side Nav Command", vibe: "Desktop-dashboard gevoel met vaste zij-navigatie en command center.", unlock: "Power user" },
+  { id: "immersion", name: "Full Immersion", vibe: "Cinematic fullscreen adventure, grote beelden en minimale chrome.", unlock: "Epic campaign" }
 ];
 
 
@@ -569,7 +574,7 @@ function App() {
             <div className="brandIcon"><Gamepad2 size={22} /></div>
             <div>
               <strong>SquadUp<span>.gg</span></strong>
-              <small>v0.18 · Friday Squad</small>
+              <small>v0.19 · Friday Squad</small>
             </div>
           </button>
           <button className="iconButton" onClick={simulatePurchase}><ShoppingBag size={19} /></button>
@@ -649,50 +654,29 @@ function App() {
   );
 }
 
-function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFeed, squad, me, selectedBadges, planGame, setTab, notify, addXp, presence, cyclePresence, myAvailability, setAvailability, squadMood, setSquadMood, sessionLength, setSessionLength, tonightPicks, activeTheme }) {
-  const slide = slides[selectedHero];
 
+function HomeLayoutFrame(props) {
+  const { activeTheme } = props;
+  if (activeTheme === "deck") return <DeckHome {...props} />;
+  if (activeTheme === "arcade") return <ArcadeHome {...props} />;
+  if (activeTheme === "cozy") return <CozyHome {...props} />;
+  if (activeTheme === "lanparty") return <LanPartyHome {...props} />;
+  if (activeTheme === "minimal") return <MinimalHome {...props} />;
+  if (activeTheme === "grid") return <GridCommandHome {...props} />;
+  if (activeTheme === "carousel") return <CarouselHome {...props} />;
+  if (activeTheme === "sidenav") return <SideNavHome {...props} />;
+  if (activeTheme === "immersion") return <ImmersionHome {...props} />;
+  return <NeonHome {...props} />;
+}
+
+function ThemeHomeCore({ event, presence, cyclePresence, myAvailability, setAvailability, squadMood, setSquadMood, sessionLength, setSessionLength, tonightPicks, planGame, feed, setFeed, setTab, addXp, squad }) {
   function react(id) {
     setFeed(prev => prev.map(item => item.id === id ? { ...item, reactions: item.reactions + 1 } : item));
     addXp(8, "Feed reactie");
   }
 
   return (
-    <main className="screen">
-      <section className={`heroCarousel ${slide.bg}`}>
-        <div className="heroIcon">{slide.icon}</div>
-        <div className="kicker"><Sparkles size={14} /> {slide.eyebrow}</div>
-        <h1>{slide.title}</h1>
-        <p>{slide.body}</p>
-        <button className="primaryBtn" onClick={slide.action}>{slide.cta}</button>
-        <div className="dots">
-          {slides.map((_, index) => (
-            <button key={index} className={selectedHero === index ? "active" : ""} onClick={() => setSelectedHero(index)} />
-          ))}
-        </div>
-      </section>
-
-      <article className="themeIdentity">
-        <span>Active layout theme</span>
-        <strong>{themeOptions.find(t => t.id === activeTheme)?.name}</strong>
-      </article>
-
-
-      <section className="identityCard">
-        <div className="avatarBig">S</div>
-        <div className="identityMain">
-          <div className="identityTop">
-            <div>
-              <h2>{me.name}</h2>
-              <p>Level {me.level} · {me.xp} XP</p>
-            </div>
-            <span className="rankPill"><Crown size={13} /> Squad Captain</span>
-          </div>
-          <div className="xpBar"><span style={{ width: `${me.xp % 170 / 170 * 100}%` }} /></div>
-          <BadgeShowcase ids={selectedBadges} />
-        </div>
-      </section>
-
+    <>
       <SectionHeader title="Live squad presence" action="Mock realtime" />
       <PresenceStrip presence={presence} onRefresh={cyclePresence} />
 
@@ -703,20 +687,204 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
       <TonightPicks picks={tonightPicks} onPlan={planGame} />
 
       <SectionHeader title="Volgende sessie" action={`${readyCount(event)}/5 ready`} />
-      <EventCard event={event} onAttendance={(status) => notify(`Open Plan om ${status} te zetten`)} />
+      <EventCard event={event} onAttendance={(status) => addXp(5, `Status: ${status}`)} />
 
-      <SectionHeader title="Nieuwe game gekocht" action="Purchase alerts" />
+      <SectionHeader title="Squad feed" action="Momentum" />
       <div className="feedStack">
         {feed.slice(0, 3).map(item => (
-          <FeedCard key={item.id} item={item} onReact={() => react(item.id)} onAction={() => {
-            if (item.action.toLowerCase().includes("plan")) setTab("plan");
-            notify(item.action);
-          }} />
+          <FeedCard key={item.id} item={item} onReact={() => react(item.id)} onAction={() => setTab("plan")} />
         ))}
       </div>
 
       <SectionHeader title="Leaderboard" action="Deze maand" />
       <Leaderboard squad={squad} />
+    </>
+  );
+}
+
+function NeonHome(props) {
+  const slide = props.slides[props.selectedHero];
+  return (
+    <>
+      <section className={`heroCarousel ${slide.bg}`}>
+        <div className="heroIcon">{slide.icon}</div>
+        <div className="kicker"><Sparkles size={14} /> {slide.eyebrow}</div>
+        <h1>{slide.title}</h1>
+        <p>{slide.body}</p>
+        <button className="primaryBtn" onClick={slide.action}>{slide.cta}</button>
+        <div className="dots">{props.slides.map((_, i) => <button key={i} className={props.selectedHero === i ? "active" : ""} onClick={() => props.setSelectedHero(i)} />)}</div>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <IdentityCard {...props} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function DeckHome(props) {
+  return (
+    <div className="deckHome">
+      <aside className="deckRail"><Home size={16}/><Search size={16}/><Users size={16}/><CalendarDays size={16}/></aside>
+      <div className="deckMain">
+        <CompactHero title="Good evening, squad" body="Console layout · focus op quick actions" action="Find match" onClick={() => props.setTab("discover")} />
+        <ThemeIdentity activeTheme={props.activeTheme} />
+        <ThemeHomeCore {...props} />
+      </div>
+    </div>
+  );
+}
+
+function ArcadeHome(props) {
+  return (
+    <>
+      <section className="arcadeHero">
+        <div className="kicker">PRESS START</div>
+        <h1>WHAT WE PLAYING TONIGHT?</h1>
+        <button onClick={() => props.planGame(props.tonightPicks[0])}>START MATCH</button>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function CozyHome(props) {
+  return (
+    <>
+      <section className="cozyHero">
+        <div className="kicker">Your Squad</div>
+        <h1>What shall we play tonight?</h1>
+        <p>We've got some great ideas for a warm, chaotic adventure.</p>
+        <button onClick={() => props.setTab("discover")}>Open adventure board</button>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function LanPartyHome(props) {
+  return (
+    <>
+      <section className="lanPartyHero">
+        <div className="lanScreenText">WHAT ARE WE PLAYING TONIGHT?</div>
+        <button onClick={() => props.setTab("lan")}>OPEN LAN HUB</button>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function MinimalHome(props) {
+  return (
+    <>
+      <section className="minimalHero">
+        <h1>What should we play tonight?</h1>
+        <p>Smart picks for your squad, zonder overbodige ruis.</p>
+        <button onClick={() => props.planGame(props.tonightPicks[0])}>→</button>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function GridCommandHome(props) {
+  return (
+    <>
+      <section className="gridCommand">
+        <div><strong>Squad Online</strong><p>{props.presence.filter(p => p.status !== "offline").length} active signals</p></div>
+        <div><strong>Currently Playing</strong><p>{props.presence.find(p => p.status === "playing")?.game || "None"}</p></div>
+        <div className="wide"><strong>Mission Control</strong><button onClick={() => props.planGame(props.tonightPicks[0])}>Find Match</button></div>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function CarouselHome(props) {
+  return (
+    <>
+      <section className="carouselFocus">
+        {props.tonightPicks.map((game, i) => (
+          <article key={game.id} className={i === 0 ? "focus" : ""}>
+            <span>{game.icon || "🎮"}</span>
+            <h2>{game.name}</h2>
+            <p>{game.tonightScore}% tonight fit</p>
+            <button onClick={() => props.planGame(game)}>Join</button>
+          </article>
+        ))}
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function SideNavHome(props) {
+  return (
+    <div className="sideNavLayout">
+      <aside><b>Dashboard</b><span>Discover</span><span>Squad</span><span>Plan</span><span>Games</span></aside>
+      <main>
+        <CompactHero title="Dashboard" body="Command center voor je squad." action="Tonight match" onClick={() => props.planGame(props.tonightPicks[0])} />
+        <ThemeIdentity activeTheme={props.activeTheme} />
+        <ThemeHomeCore {...props} />
+      </main>
+    </div>
+  );
+}
+
+function ImmersionHome(props) {
+  return (
+    <>
+      <section className="immersionHero">
+        <div>
+          <h1>WHAT EPIC ADVENTURE TONIGHT?</h1>
+          <p>The squad is ready. The choice is yours.</p>
+          <button onClick={() => props.setTab("discover")}>Find your game</button>
+        </div>
+      </section>
+      <ThemeIdentity activeTheme={props.activeTheme} />
+      <ThemeHomeCore {...props} />
+    </>
+  );
+}
+
+function CompactHero({ title, body, action, onClick }) {
+  return <section className="compactHero"><h1>{title}</h1><p>{body}</p><button onClick={onClick}>{action}</button></section>;
+}
+
+function ThemeIdentity({ activeTheme }) {
+  return (
+    <article className="themeIdentity">
+      <span>Active layout mode</span>
+      <strong>{themeOptions.find(t => t.id === activeTheme)?.name}</strong>
+    </article>
+  );
+}
+
+function IdentityCard({ me, selectedBadges }) {
+  return (
+    <section className="identityCard">
+      <div className="avatarBig">S</div>
+      <div className="identityMain">
+        <div className="identityTop">
+          <div><h2>{me.name}</h2><p>Level {me.level} · {me.xp} XP</p></div>
+          <span className="rankPill"><Crown size={13} /> Squad Captain</span>
+        </div>
+        <div className="xpBar"><span style={{ width: `${me.xp % 170 / 170 * 100}%` }} /></div>
+        <BadgeShowcase ids={selectedBadges} />
+      </div>
+    </section>
+  );
+}
+
+function HomeScreen({
+  return (
+    <main className="screen">
+      <HomeLayoutFrame {...arguments[0]} />
     </main>
   );
 }
@@ -1090,7 +1258,7 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, a
         </div>
       </article>
 
-      <SectionHeader title="Layout themes" action="Verandert structuur" />
+      <SectionHeader title="Layout engine" action="10 modes" />
       <article className="card themePicker">
         {themeOptions.map(theme => (
           <button key={theme.id} className={`themeOption ${theme.id} ${activeTheme === theme.id ? "active" : ""}`} onClick={() => {
