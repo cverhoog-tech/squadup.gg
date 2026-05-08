@@ -1239,3 +1239,256 @@ p {
     grid-template-columns: repeat(4, 1fr);
   }
 }
+
+
+/* v0.17 live squad presence + smart tonight */
+.presencePanel,
+.availabilityPanel {
+  padding: 14px;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, rgba(0,228,168,.08), rgba(125,92,255,.08)), var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 46px rgba(0,0,0,.18);
+}
+
+.presenceSummary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.presenceSummary strong,
+.presenceSummary span {
+  display: block;
+}
+
+.presenceSummary span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 900;
+  margin-top: 3px;
+}
+
+.presenceSummary button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 11px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.08);
+  color: #dce4ff;
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.presenceScroller {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.presenceScroller::-webkit-scrollbar {
+  display: none;
+}
+
+.presenceCard {
+  min-width: 132px;
+  padding: 12px;
+  border-radius: 20px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.presenceAvatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 9px;
+  font-weight: 1000;
+  background: rgba(255,255,255,.09);
+  border: 2px solid rgba(255,255,255,.13);
+}
+
+.presenceCard.online .presenceAvatar { border-color: rgba(0,228,168,.75); box-shadow: 0 0 0 4px rgba(0,228,168,.10); }
+.presenceCard.playing .presenceAvatar { border-color: rgba(255,200,87,.85); box-shadow: 0 0 0 4px rgba(255,200,87,.11); }
+.presenceCard.voice .presenceAvatar { border-color: rgba(125,92,255,.85); box-shadow: 0 0 0 4px rgba(125,92,255,.13); }
+.presenceCard.idle .presenceAvatar { border-color: rgba(154,166,197,.45); }
+.presenceCard.offline { opacity: .55; }
+
+.presenceCard strong,
+.presenceCard span,
+.presenceCard small {
+  display: block;
+}
+
+.presenceCard span {
+  min-height: 34px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  font-weight: 850;
+  margin-top: 4px;
+}
+
+.presenceCard small {
+  color: var(--accent2);
+  font-size: 11px;
+  font-weight: 1000;
+  margin-top: 6px;
+}
+
+.presenceCard button {
+  margin-top: 9px;
+  width: 100%;
+  padding: 8px;
+  border-radius: 999px;
+  background: rgba(0,228,168,.14);
+  color: var(--accent2);
+  font-size: 11px;
+  font-weight: 1000;
+}
+
+.availabilityPanel {
+  display: grid;
+  gap: 13px;
+}
+
+.availabilityButtons {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.availabilityButtons button {
+  padding: 12px 8px;
+  border-radius: 16px;
+  background: rgba(255,255,255,.07);
+  color: var(--muted);
+  font-weight: 1000;
+  border: 1px solid transparent;
+}
+
+.availabilityButtons .yes.active {
+  color: var(--accent2);
+  border-color: rgba(0,228,168,.32);
+  background: rgba(0,228,168,.13);
+}
+
+.availabilityButtons .maybe.active {
+  color: var(--yellow);
+  border-color: rgba(255,200,87,.32);
+  background: rgba(255,200,87,.13);
+}
+
+.availabilityButtons .no.active {
+  color: #ff9aad;
+  border-color: rgba(255,92,122,.32);
+  background: rgba(255,92,122,.13);
+}
+
+.selectorBlock {
+  display: grid;
+  gap: 8px;
+}
+
+.selectorTitle {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #dce4ff;
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.choiceRow {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.choiceRow::-webkit-scrollbar {
+  display: none;
+}
+
+.choiceRow button {
+  flex: 0 0 auto;
+  padding: 9px 11px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.07);
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 1000;
+}
+
+.choiceRow button.active {
+  color: #06140f;
+  background: linear-gradient(135deg, var(--accent2), #b7ffec);
+}
+
+.tonightStack {
+  display: grid;
+  gap: 10px;
+}
+
+.tonightPick {
+  display: grid;
+  grid-template-columns: 42px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 13px;
+  border-radius: 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  box-shadow: 0 16px 46px rgba(0,0,0,.16);
+}
+
+.tonightPick.best {
+  background: linear-gradient(135deg, rgba(0,228,168,.11), rgba(125,92,255,.09)), var(--panel);
+  border-color: rgba(0,228,168,.28);
+}
+
+.tonightRank {
+  width: 42px;
+  height: 42px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: rgba(255,255,255,.08);
+  color: var(--accent2);
+  font-weight: 1000;
+}
+
+.tonightPick p {
+  font-size: 12px;
+  margin-top: 3px;
+}
+
+.tonightSignals {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tonightSignals span {
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: rgba(255,255,255,.07);
+  color: #dce4ff;
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.tonightPick button {
+  padding: 10px 12px;
+  border-radius: 999px;
+  background: rgba(0,228,168,.14);
+  color: var(--accent2);
+  font-weight: 1000;
+}

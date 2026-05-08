@@ -24,6 +24,9 @@ import {
   Trophy,
   User,
   Users,
+  Wifi,
+  Clock,
+  Radio,
   Zap
 } from "lucide-react";
 import "./style.css";
@@ -293,6 +296,18 @@ baseDiscoverGames.push(
 
 const discoverGames = baseDiscoverGames;
 
+const initialPresence = [
+  { name: "Shane", status: "online", activity: "Browsing SquadUp.gg", game: "SquadUp.gg", minutes: 12, joinable: false, mood: "Survival", availability: "yes", ring: "online" },
+  { name: "Kevin", status: "playing", activity: "Playing Helldivers 2", game: "Helldivers 2", minutes: 48, joinable: true, mood: "Competitive", availability: "yes", ring: "playing" },
+  { name: "Tom", status: "voice", activity: "In Discord voice", game: "Deep Rock Galactic", minutes: 22, joinable: true, mood: "Quick", availability: "yes", ring: "voice" },
+  { name: "Sven", status: "idle", activity: "Idle", game: "Away", minutes: 7, joinable: false, mood: "Chill", availability: "maybe", ring: "idle" },
+  { name: "Mark", status: "offline", activity: "Offline", game: "Last seen: Valheim", minutes: 0, joinable: false, mood: "Long", availability: "no", ring: "offline" }
+];
+
+const moodOptions = ["Chill", "Competitive", "Horror", "Survival", "Quick", "Long"];
+const lengthOptions = ["30-60 min", "1-2 uur", "All night", "LAN weekend"];
+
+
 const initialEvents = [
   {
     id: 1,
@@ -399,6 +414,10 @@ function App() {
     google: false,
     apple: false
   });
+  const [presence, setPresence] = useState(initialPresence);
+  const [myAvailability, setMyAvailability] = useState("yes");
+  const [squadMood, setSquadMood] = useState("Quick");
+  const [sessionLength, setSessionLength] = useState("1-2 uur");
 
   function notify(message) {
     setToast(message);
@@ -446,6 +465,37 @@ function App() {
     }, ...prev]);
     setTab("plan");
     addXp(40, "Game night gepland");
+  }
+
+  function cyclePresence() {
+    setPresence(prev => prev.map(member => {
+      if (member.name === "Kevin") return { ...member, game: member.game === "Helldivers 2" ? "Deep Rock Galactic" : "Helldivers 2", activity: member.game === "Helldivers 2" ? "Playing Deep Rock Galactic" : "Playing Helldivers 2", minutes: member.minutes + 6 };
+      if (member.name === "Sven") return { ...member, status: member.status === "idle" ? "online" : "idle", ring: member.ring === "idle" ? "online" : "idle", activity: member.status === "idle" ? "Online now" : "Idle" };
+      return member;
+    }));
+    notify("Live presence bijgewerkt");
+  }
+
+  function setAvailability(value) {
+    setMyAvailability(value);
+    setPresence(prev => prev.map(member => member.name === userName ? { ...member, availability: value } : member));
+    addXp(12, "Beschikbaarheid bijgewerkt");
+  }
+
+  function tonightScore(game) {
+    const onlineCount = presence.filter(p => ["online", "playing", "voice"].includes(p.status)).length;
+    const activeForGame = presence.filter(p => p.game === game.name).length;
+    const lengthBoost = sessionLength === "30-60 min" && game.types?.includes("Quick") ? 8 : sessionLength === "All night" && game.types?.includes("Long") ? 8 : 0;
+    const moodBoost = game.types?.includes(squadMood) || game.tags?.includes(squadMood) ? 10 : 0;
+    const base = game.score || 75;
+    return Math.min(99, Math.round(base * 0.62 + onlineCount * 5 + activeForGame * 8 + lengthBoost + moodBoost));
+  }
+
+  function getTonightPicks() {
+    return [...discoverGames]
+      .map(game => ({ ...game, tonightScore: tonightScore(game) }))
+      .sort((a, b) => b.tonightScore - a.tonightScore)
+      .slice(0, 3);
   }
 
   function simulatePurchase() {
@@ -508,7 +558,7 @@ function App() {
             <div className="brandIcon"><Gamepad2 size={22} /></div>
             <div>
               <strong>SquadUp<span>.gg</span></strong>
-              <small>v0.16 · Friday Squad</small>
+              <small>v0.17 · Friday Squad</small>
             </div>
           </button>
           <button className="iconButton" onClick={simulatePurchase}><ShoppingBag size={19} /></button>
@@ -529,6 +579,15 @@ function App() {
             setTab={setTab}
             notify={notify}
             addXp={addXp}
+            presence={presence}
+            cyclePresence={cyclePresence}
+            myAvailability={myAvailability}
+            setAvailability={setAvailability}
+            squadMood={squadMood}
+            setSquadMood={setSquadMood}
+            sessionLength={sessionLength}
+            setSessionLength={setSessionLength}
+            tonightPicks={getTonightPicks()}
           />
         )}
 
@@ -576,7 +635,7 @@ function App() {
   );
 }
 
-function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFeed, squad, me, selectedBadges, planGame, setTab, notify, addXp }) {
+function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFeed, squad, me, selectedBadges, planGame, setTab, notify, addXp, presence, cyclePresence, myAvailability, setAvailability, squadMood, setSquadMood, sessionLength, setSessionLength, tonightPicks }) {
   const slide = slides[selectedHero];
 
   function react(id) {
@@ -614,6 +673,15 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
         </div>
       </section>
 
+      <SectionHeader title="Live squad presence" action="Mock realtime" />
+      <PresenceStrip presence={presence} onRefresh={cyclePresence} />
+
+      <SectionHeader title="Available tonight?" action="1 tap" />
+      <AvailabilityPanel value={myAvailability} onChange={setAvailability} mood={squadMood} setMood={setSquadMood} length={sessionLength} setLength={setSessionLength} />
+
+      <SectionHeader title="What should we play tonight?" action="Smart picks" />
+      <TonightPicks picks={tonightPicks} onPlan={planGame} />
+
       <SectionHeader title="Volgende sessie" action={`${readyCount(event)}/5 ready`} />
       <EventCard event={event} onAttendance={(status) => notify(`Open Plan om ${status} te zetten`)} />
 
@@ -630,6 +698,85 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
       <SectionHeader title="Leaderboard" action="Deze maand" />
       <Leaderboard squad={squad} />
     </main>
+  );
+}
+
+function PresenceStrip({ presence, onRefresh }) {
+  const online = presence.filter(p => ["online", "playing", "voice"].includes(p.status)).length;
+  const playing = presence.filter(p => p.status === "playing" || p.status === "voice").length;
+
+  return (
+    <article className="presencePanel">
+      <div className="presenceSummary">
+        <div>
+          <strong>{online} online</strong>
+          <span>{playing} playing / voice</span>
+        </div>
+        <button onClick={onRefresh}><Radio size={15} /> Refresh</button>
+      </div>
+      <div className="presenceScroller">
+        {presence.map(member => (
+          <div className={`presenceCard ${member.ring}`} key={member.name}>
+            <div className="presenceAvatar">{member.name[0]}</div>
+            <strong>{member.name}</strong>
+            <span>{member.activity}</span>
+            <small>{member.status === "offline" ? "offline" : `${member.minutes} min`}</small>
+            {member.joinable && <button>Joinable</button>}
+          </div>
+        ))}
+      </div>
+    </article>
+  );
+}
+
+function AvailabilityPanel({ value, onChange, mood, setMood, length, setLength }) {
+  return (
+    <article className="availabilityPanel">
+      <div className="availabilityButtons">
+        <button className={value === "yes" ? "yes active" : "yes"} onClick={() => onChange("yes")}>✅ Free</button>
+        <button className={value === "maybe" ? "maybe active" : "maybe"} onClick={() => onChange("maybe")}>🤔 Maybe</button>
+        <button className={value === "no" ? "no active" : "no"} onClick={() => onChange("no")}>💤 No</button>
+      </div>
+
+      <div className="selectorBlock">
+        <div className="selectorTitle"><Flame size={15} /> Squad mood</div>
+        <div className="choiceRow">
+          {moodOptions.map(option => (
+            <button key={option} className={mood === option ? "active" : ""} onClick={() => setMood(option)}>{option}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="selectorBlock">
+        <div className="selectorTitle"><Clock size={15} /> Session length</div>
+        <div className="choiceRow">
+          {lengthOptions.map(option => (
+            <button key={option} className={length === option ? "active" : ""} onClick={() => setLength(option)}>{option}</button>
+          ))}
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function TonightPicks({ picks, onPlan }) {
+  return (
+    <div className="tonightStack">
+      {picks.map((game, index) => (
+        <article className={`tonightPick ${index === 0 ? "best" : ""}`} key={game.id}>
+          <div className="tonightRank">#{index + 1}</div>
+          <div>
+            <h3>{game.name}</h3>
+            <p>{game.playModes?.join(" · ")} · {game.mode}</p>
+            <div className="tonightSignals">
+              <span>{game.tonightScore}% tonight fit</span>
+              <span>{game.owned}</span>
+            </div>
+          </div>
+          <button onClick={() => onPlan(game)}>Plan</button>
+        </article>
+      ))}
+    </div>
   );
 }
 

@@ -1,15 +1,17 @@
-# SquadUp.gg v0.16
+# SquadUp.gg v0.17
 
 Nieuwe upgrade:
-- SteamDB Today lijst niet meer prominent bovenaan
-- Steam ranking subtiel geïntegreerd op gamekaarten
-- Per game duidelijke statusbuttons: Owned, Want, Installed, Active
-- Squad readiness met own/want/installed/active signalen
-- Profiel heeft account linking cards voor Steam, Discord, Microsoft/Xbox, Google en Apple
-- Avatar upload/preset uit v0.15 behouden
-- LAN CRUD uit v0.15 behouden
+- Live Squad Presence op Home
+- Online / playing / voice / idle / offline status
+- Zien wat vrienden spelen
+- Refresh mock voor presence updates
+- Available Tonight quick toggle
+- Squad mood voting
+- Session length selector
+- Smart Tonight Picks op basis van mood, sessielengte, online members en game metadata
+- Alle v0.16 features behouden: account linking UI, game ownership toggles, Steam ranking in cards, LAN CRUD, avatar upload
 
-Let op: account linking is nu UI/mock. Voor echte Steam/Discord/Microsoft/Google/Apple koppelingen is backend OAuth nodig.
+Let op: live presence is nu mock state. Echte online status vereist backend realtime presence + Steam/Discord API koppelingen.
 
 ## Run lokaal
 
