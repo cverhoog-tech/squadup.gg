@@ -46,7 +46,7 @@ const initialSquad = [
   { name: "Mark", xp: 1520, level: 10, badges: ["pathfinder", "backlog", "wallet"], ready: 63, discovery: 8, avatar: "M" }
 ];
 
-const discoverGames = [
+const baseDiscoverGames = [
   {
     id: 1,
     name: "Deep Rock Galactic",
@@ -54,8 +54,10 @@ const discoverGames = [
     score: 94,
     price: "€9,99 sale",
     owned: "5/5 bezit",
-    desc: "Co-op mining chaos met korte missies, veel teamwork en genoeg domme momenten voor jullie squad.",
-    tags: ["Co-op", "4 spelers", "Korte sessies", "Iedereen bezit"],
+    playModes: ["Co-op PvE"],
+    types: ["Co-op", "PvE", "Survival-ish", "Quick"],
+    desc: "Een compacte co-op shooter waarin jullie samen grotten induiken, resources verzamelen en proberen levend terug te komen. De kracht voor jullie squad zit in de korte missies, duidelijke rollen en constante chaos zonder dat iemand eerst drie uur tutorials hoeft te kijken.",
+    tags: ["Co-op", "PvE", "4 spelers", "Korte sessies", "Iedereen bezit"],
     mode: "Tonight pick"
   },
   {
@@ -65,7 +67,9 @@ const discoverGames = [
     score: 87,
     price: "€29,99",
     owned: "4/5 bezit",
-    desc: "Langer sci-fi avontuur met exploration, base building en genoeg vrijheid om jullie eigen verhaal te maken.",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Co-op", "PvE", "Survival", "Exploration", "Long"],
+    desc: "Een groot sci-fi avontuur rond ontdekken, base building, resource gathering en samen verdwalen in rare sterrenstelsels. Dit is minder geschikt als snelle one-night pick, maar sterk als jullie een nieuw langlopend squad-project willen starten.",
     tags: ["Sci-fi", "Exploration", "Base building", "Long adventure"],
     mode: "New adventure"
   },
@@ -76,7 +80,9 @@ const discoverGames = [
     score: 81,
     price: "€19,50",
     owned: "2/5 bezit",
-    desc: "Hardcore survival sandbox voor lange avonden, paniek, slechte beslissingen en inside jokes.",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Survival", "PvE", "Co-op", "Hardcore", "LAN"],
+    desc: "Een harde survival sandbox waarin kleine fouten snel veranderen in legendarische groepsverhalen. Perfect voor squads die houden van planning, paniek, base defense en de onvermijdelijke discussie wie de auto heeft laten crashen.",
     tags: ["Survival", "Hardcore", "LAN chaos", "Sandbox"],
     mode: "LAN chaos"
   },
@@ -87,11 +93,119 @@ const discoverGames = [
     score: 89,
     price: "€24,99",
     owned: "3/5 bezit",
-    desc: "Snelle roguelike runs voor avonden waarop niemand zin heeft in lange uitleg.",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Co-op", "PvE", "Roguelike", "Quick"],
+    desc: "Snelle roguelike runs waarin elke run groter, chaotischer en gevaarlijker wordt. Ideaal voor avonden waarop jullie direct willen starten, weinig organisatie willen en toch een duidelijke run-based uitdaging zoeken.",
     tags: ["Roguelike", "Fast runs", "Co-op", "Low setup"],
     mode: "Quick session"
+  },
+  {
+    id: 5,
+    name: "Valheim",
+    image: "linear-gradient(135deg, rgba(44, 76, 58, .86), rgba(255, 200, 87, .18)), url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=900&q=80')",
+    score: 92,
+    price: "€19,99",
+    owned: "4/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Survival", "Co-op", "PvE", "Crafting", "Long"],
+    desc: "Een survival crafting avontuur met bouwen, varen, boss fights en veel ruimte voor gezamenlijke projecten. Voor jullie squad is dit sterk als langlopend avontuur waarin iedereen een rol kan pakken: bouwer, farmer, explorer of chaos-agent.",
+    tags: ["Survival", "Crafting", "Bosses", "Long adventure"],
+    mode: "Squad project"
+  },
+  {
+    id: 6,
+    name: "The Finals",
+    image: "linear-gradient(135deg, rgba(100, 38, 63, .86), rgba(255, 92, 122, .24)), url('https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=900&q=80')",
+    score: 78,
+    price: "Free-to-play",
+    owned: "5/5 kan spelen",
+    playModes: ["PvP", "Team PvP"],
+    types: ["PvP", "Shooter", "Competitive", "Quick"],
+    desc: "Een snelle team shooter met destructieve arena's, cashout objectives en veel clutch-momenten. Goed wanneer jullie competitieve energie hebben, maar minder geschikt als iemand een relaxte PvE-avond zoekt.",
+    tags: ["PvP", "Team shooter", "Free", "Competitive"],
+    mode: "PvP night"
+  },
+  {
+    id: 7,
+    name: "Baldur's Gate 3",
+    image: "linear-gradient(135deg, rgba(72, 44, 92, .86), rgba(125, 92, 255, .22)), url('https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&w=900&q=80')",
+    score: 84,
+    price: "€59,99",
+    owned: "2/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["RPG", "Co-op", "PvE", "Story", "Long"],
+    desc: "Een diepe party RPG waarin keuzes, builds en compleet ontsporende plannen centraal staan. Niet de makkelijkste game voor korte sessies, maar uitstekend als jullie een verhalend avontuur willen dat maanden kan meegaan.",
+    tags: ["RPG", "Story", "Co-op", "Long campaign"],
+    mode: "Campaign"
+  },
+  {
+    id: 8,
+    name: "Palworld",
+    image: "linear-gradient(135deg, rgba(42, 83, 92, .86), rgba(0, 228, 168, .20)), url('https://images.unsplash.com/photo-1566576912321-d58ddd7a6088?auto=format&fit=crop&w=900&q=80')",
+    score: 86,
+    price: "€28,99",
+    owned: "3/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Survival", "Co-op", "PvE", "Crafting", "Base building"],
+    desc: "Een survival crafting game met creature collecting, base automation en genoeg rare situaties om de feed vol te krijgen. Vooral interessant als jullie houden van bouwen, verzamelen en semi-chaotische sandbox progressie.",
+    tags: ["Survival", "Base building", "Creature collecting", "Co-op"],
+    mode: "New adventure"
+  },
+  {
+    id: 9,
+    name: "Rocket League",
+    image: "linear-gradient(135deg, rgba(31, 50, 93, .86), rgba(255, 200, 87, .24)), url('https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=900&q=80')",
+    score: 83,
+    price: "Free-to-play",
+    owned: "5/5 kan spelen",
+    playModes: ["PvP", "Co-op vs AI"],
+    types: ["PvP", "Competitive", "Quick", "LAN"],
+    desc: "Snelle matches, direct plezier en genoeg ruimte voor zowel tryhard als domme goals. Voor LAN-avonden is dit een sterke fallback omdat iedereen snel begrijpt wat de bedoeling is en potjes kort blijven.",
+    tags: ["PvP", "Quick matches", "Free", "LAN"],
+    mode: "LAN tournament"
+  },
+  {
+    id: 10,
+    name: "Satisfactory",
+    image: "linear-gradient(135deg, rgba(88, 56, 28, .86), rgba(255, 200, 87, .20)), url('https://images.unsplash.com/photo-1581090464777-f3220bbe1b8b?auto=format&fit=crop&w=900&q=80')",
+    score: 79,
+    price: "€39,99",
+    owned: "2/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Automation", "Co-op", "PvE", "Building", "Long"],
+    desc: "Een fabriek-bouwgame waarin optimalisatie, spaghetti-belts en steeds grotere plannen centraal staan. Niet iedereen zal dit even leuk vinden, maar voor squads met planners en builders kan dit gevaarlijk verslavend zijn.",
+    tags: ["Automation", "Building", "Long project", "Co-op"],
+    mode: "Builder pick"
+  },
+  {
+    id: 11,
+    name: "Lethal Company",
+    image: "linear-gradient(135deg, rgba(55, 57, 71, .88), rgba(255, 92, 122, .18)), url('https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=900&q=80')",
+    score: 90,
+    price: "€9,75",
+    owned: "4/5 bezit",
+    playModes: ["Co-op PvE"],
+    types: ["Horror", "Co-op", "PvE", "Quick", "LAN"],
+    desc: "Een goedkope co-op horror game die vooral werkt door voice chat, paniek en slechte beslissingen. Perfect voor korte avonden waarin jullie niet per se progressie zoeken, maar wel gegarandeerd sterke momenten krijgen.",
+    tags: ["Horror", "Co-op", "Cheap", "Voice chaos"],
+    mode: "Chaos pick"
+  },
+  {
+    id: 12,
+    name: "Stardew Valley",
+    image: "linear-gradient(135deg, rgba(55, 92, 59, .86), rgba(0, 228, 168, .18)), url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=900&q=80')",
+    score: 76,
+    price: "€13,99",
+    owned: "3/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Cozy", "Co-op", "PvE", "Farming", "Long"],
+    desc: "Een rustige farming en life sim die goed werkt als jullie een break willen van shooters en stress. De game is niet spectaculair in presentatie, maar wel sterk voor ontspannen sessies met vaste progressie.",
+    tags: ["Cozy", "Farming", "Co-op", "Relaxed"],
+    mode: "Chill pick"
   }
 ];
+
+const discoverGames = baseDiscoverGames;
 
 const initialEvents = [
   {
@@ -393,34 +507,89 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
 }
 
 function DiscoverScreen({ games, planGame }) {
-  const [mode, setMode] = useState("All");
-  const modes = ["All", "Tonight", "LAN", "Budget", "Long"];
+  const [activeFilters, setActiveFilters] = useState(["All"]);
+  const [visibleCount, setVisibleCount] = useState(8);
 
-  const filtered = games.filter(game => {
-    if (mode === "All") return true;
-    if (mode === "Tonight") return game.mode.includes("Tonight") || game.tags.includes("Korte sessies");
-    if (mode === "LAN") return game.mode.includes("LAN");
-    if (mode === "Budget") return game.price.includes("€9") || game.price.includes("€19");
-    if (mode === "Long") return game.mode.includes("adventure");
-    return true;
+  const filters = ["All", "Survival", "Co-op", "PvE", "PvP", "Singleplayer", "LAN", "Quick", "Long", "RPG", "Horror", "Building"];
+
+  const endlessGames = useMemo(() => {
+    const suffixes = ["Squad Pick", "Weekend Pick", "LAN Candidate", "Backlog Revival", "Budget Alert"];
+    return Array.from({ length: 4 }).flatMap((_, loop) =>
+      games.map(game => ({
+        ...game,
+        id: game.id + loop * 100,
+        score: Math.max(61, Math.min(99, game.score - loop * 3 + (game.id % 3))),
+        mode: loop === 0 ? game.mode : suffixes[(game.id + loop) % suffixes.length]
+      }))
+    );
+  }, [games]);
+
+  const selected = activeFilters.includes("All") ? [] : activeFilters;
+
+  const filtered = endlessGames.filter(game => {
+    if (!selected.length) return true;
+    return selected.every(filter => {
+      if (filter === "Singleplayer") return game.playModes.includes("Singleplayer");
+      return game.types.includes(filter) || game.playModes.includes(filter) || game.tags.includes(filter) || game.mode.includes(filter);
+    });
   });
+
+  const visibleGames = filtered.slice(0, visibleCount);
+
+  function toggleFilter(filter) {
+    setVisibleCount(8);
+    if (filter === "All") {
+      setActiveFilters(["All"]);
+      return;
+    }
+
+    setActiveFilters(prev => {
+      const withoutAll = prev.filter(f => f !== "All");
+      if (withoutAll.includes(filter)) {
+        const next = withoutAll.filter(f => f !== filter);
+        return next.length ? next : ["All"];
+      }
+      return [...withoutAll, filter];
+    });
+  }
 
   return (
     <main className="screen">
       <PageHeader
         icon={<Search size={18} />}
         label="Discover"
-        title="Steam-style discovery voor jouw squad."
-        body="Mock Steam/IGDB kaarten met artwork, prijs, ownership, beschrijving en squad match."
+        title="Explore eindeloos nieuwe games voor je squad."
+        body="Filter op Survival, Co-op, PvE, PvP, Singleplayer, LAN of korte sessies. Elke kaart toont speelmodus, prijs, ownership, matchscore en een langere beschrijving zodat je beter kunt kiezen."
       />
 
-      <div className="modeRow">
-        {modes.map(m => <button key={m} className={mode === m ? "active" : ""} onClick={() => setMode(m)}>{m}</button>)}
+      <div className="filterBar">
+        {filters.map(filter => (
+          <button
+            key={filter}
+            className={activeFilters.includes(filter) ? "active" : ""}
+            onClick={() => toggleFilter(filter)}
+          >
+            {filter}
+          </button>
+        ))}
+      </div>
+
+      <div className="discoverMeta">
+        <span>{filtered.length} squad matches</span>
+        <span>{selected.length ? selected.join(" + ") : "Alle types"}</span>
       </div>
 
       <div className="discoverGrid">
-        {filtered.map(game => <SteamGameCard key={game.id} game={game} onPlan={() => planGame(game)} />)}
+        {visibleGames.map(game => <SteamGameCard key={game.id} game={game} onPlan={() => planGame(game)} />)}
       </div>
+
+      {visibleCount < filtered.length ? (
+        <button className="wideButton" onClick={() => setVisibleCount(count => count + 6)}>
+          Meer games laden
+        </button>
+      ) : (
+        <div className="endOfList">Je hebt alle matches voor deze filters gezien.</div>
+      )}
     </main>
   );
 }
@@ -582,7 +751,17 @@ function SteamGameCard({ game, onPlan }) {
           <h3>{game.name}</h3>
           <strong>{game.price}</strong>
         </div>
-        <p>{game.desc}</p>
+
+        <div className="playModeRow">
+          {game.playModes.map(mode => (
+            <span key={mode} className={mode.includes("PvP") ? "pvp" : mode.includes("Single") ? "single" : "pve"}>
+              {mode}
+            </span>
+          ))}
+        </div>
+
+        <p className="gameDesc">{game.desc}</p>
+
         <div className="tagRow">{game.tags.map(t => <span key={t}>{t}</span>)}</div>
         <div className="buyRow">
           <span><Users size={14} /> {game.owned}</span>
