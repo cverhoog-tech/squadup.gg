@@ -3,6 +3,7 @@ import React, { useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import {
   BadgeCheck,
+  Camera,
   CalendarDays,
   ChevronRight,
   Crown,
@@ -11,6 +12,8 @@ import {
   Home,
   Laptop,
   Medal,
+  Trash2,
+  Edit3,
   MessageCircle,
   Plus,
   Search,
@@ -205,6 +208,89 @@ const baseDiscoverGames = [
   }
 ];
 
+
+baseDiscoverGames.push(
+  {
+    id: 13,
+    name: "Enshrouded",
+    image: "linear-gradient(135deg, rgba(62, 48, 82, .86), rgba(255, 200, 87, .16)), url('https://images.unsplash.com/photo-1518709268805-4e9042af2176?auto=format&fit=crop&w=900&q=80')",
+    score: 88,
+    price: "€29,99",
+    owned: "2/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Survival", "Co-op", "PvE", "Crafting", "RPG", "Long"],
+    desc: "Een survival RPG met bouwen, crafting, exploration en progression die goed past bij squads die een gezamenlijk project zoeken. De game geeft genoeg vrijheid voor spelers met verschillende rollen zonder meteen te hardcore te worden.",
+    tags: ["Survival", "RPG", "Building", "Co-op"],
+    mode: "Recommended"
+  },
+  {
+    id: 14,
+    name: "Helldivers 2",
+    image: "linear-gradient(135deg, rgba(44, 55, 100, .86), rgba(0, 228, 168, .14)), url('https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&w=900&q=80')",
+    score: 93,
+    price: "€39,99",
+    owned: "4/5 bezit",
+    playModes: ["Co-op PvE"],
+    types: ["Co-op", "PvE", "Shooter", "Quick"],
+    desc: "Een co-op shooter waarin chaos, teamwork en friendly fire constant door elkaar lopen. Sterk voor korte sessies, maar ook goed voor vaste avonden omdat missies duidelijk en snel te plannen zijn.",
+    tags: ["Co-op", "PvE", "Shooter", "Squad chaos"],
+    mode: "Squad favorite"
+  },
+  {
+    id: 15,
+    name: "Sea of Thieves",
+    image: "linear-gradient(135deg, rgba(24, 77, 92, .86), rgba(0, 228, 168, .18)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=80')",
+    score: 82,
+    price: "€39,99",
+    owned: "3/5 bezit",
+    playModes: ["Co-op PvE", "PvP"],
+    types: ["Co-op", "PvE", "PvP", "Exploration", "Long"],
+    desc: "Een piraten sandbox waar PvE voyages en onverwachte PvP elkaar kunnen afwisselen. Vooral interessant als jullie verhalen willen maken in plaats van alleen objectives afvinken.",
+    tags: ["Co-op", "PvP mogelijk", "Sandbox", "Adventure"],
+    mode: "Adventure pick"
+  },
+  {
+    id: 16,
+    name: "Hunt: Showdown",
+    image: "linear-gradient(135deg, rgba(56, 38, 33, .88), rgba(255, 92, 122, .17)), url('https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=900&q=80')",
+    score: 77,
+    price: "€39,99",
+    owned: "1/5 bezit",
+    playModes: ["PvPvE"],
+    types: ["PvP", "PvE", "Shooter", "Hardcore"],
+    desc: "Een spanningsvolle extraction shooter waarin PvE monsters vooral drukmiddelen zijn en andere spelers de echte dreiging vormen. Niet casual, maar wel sterk als jullie houden van intense comms en high-stakes momenten.",
+    tags: ["PvPvE", "Extraction", "Hardcore", "Shooter"],
+    mode: "Hardcore pick"
+  },
+  {
+    id: 17,
+    name: "Raft",
+    image: "linear-gradient(135deg, rgba(31, 75, 86, .86), rgba(255, 200, 87, .14)), url('https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80')",
+    score: 80,
+    price: "€19,99",
+    owned: "3/5 bezit",
+    playModes: ["Co-op PvE", "Singleplayer"],
+    types: ["Survival", "Co-op", "PvE", "Crafting", "Long"],
+    desc: "Een relaxtere survival game waarin jullie langzaam een drijvende basis uitbouwen. Goed voor squads die progression willen zonder constant onder maximale stress te staan.",
+    tags: ["Survival", "Crafting", "Chill", "Co-op"],
+    mode: "Chill survival"
+  },
+  {
+    id: 18,
+    name: "Phasmophobia",
+    image: "linear-gradient(135deg, rgba(34, 39, 58, .88), rgba(125, 92, 255, .16)), url('https://images.unsplash.com/photo-1509248961158-e54f6934749c?auto=format&fit=crop&w=900&q=80')",
+    score: 85,
+    price: "€16,79",
+    owned: "4/5 bezit",
+    playModes: ["Co-op PvE"],
+    types: ["Horror", "Co-op", "PvE", "Quick", "LAN"],
+    desc: "Een co-op ghost hunting game die vooral draait om communicatie, spanning en paniek. Sterk voor korte sessies of LAN-avonden waarbij lachen en schrikken belangrijker is dan lange progressie.",
+    tags: ["Horror", "Co-op", "PvE", "Voice"],
+    mode: "Party horror"
+  }
+);
+
+
 const discoverGames = baseDiscoverGames;
 
 const initialEvents = [
@@ -260,6 +346,18 @@ const initialFeed = [
   }
 ];
 
+
+const steamDbToday = [
+  { rank: 1, name: "Counter-Strike 2", current: "761k", peak: "1.33M", mode: "PvP", tag: "Competitive" },
+  { rank: 2, name: "Dota 2", current: "344k", peak: "579k", mode: "PvP", tag: "MOBA" },
+  { rank: 3, name: "PUBG: BATTLEGROUNDS", current: "327k", peak: "773k", mode: "PvP", tag: "Battle Royale" },
+  { rank: 4, name: "Apex Legends", current: "126k", peak: "296k", mode: "PvP", tag: "Squad shooter" },
+  { rank: 5, name: "Rust", current: "120k", peak: "245k", mode: "PvP/PvE", tag: "Survival" },
+  { rank: 6, name: "Team Fortress 2", current: "92k", peak: "151k", mode: "PvP", tag: "Classic" }
+];
+
+
+
 function getBadge(id) {
   return badgeLibrary.find(b => b.id === id);
 }
@@ -279,6 +377,20 @@ function App() {
     { id: 4, label: "Switch / router", done: true },
     { id: 5, label: "Slaapplekken", done: false }
   ]);
+
+  const [lanParties, setLanParties] = useState([
+    {
+      id: 1,
+      title: "LAN weekend",
+      date: "24-26 mei",
+      location: "Bij Kevin",
+      attendees: 6,
+      food: "Pizza",
+      note: "Rocket League bracket + survival night"
+    }
+  ]);
+  const [avatarImage, setAvatarImage] = useState("");
+  const [avatarPreset, setAvatarPreset] = useState("S");
 
   function notify(message) {
     setToast(message);
@@ -414,7 +526,7 @@ function App() {
 
         {tab === "discover" && <DiscoverScreen games={discoverGames} planGame={planGame} />}
         {tab === "plan" && <PlanScreen events={events} setAttendance={setAttendance} setTab={setTab} />}
-        {tab === "lan" && <LanScreen checklist={lanChecklist} setChecklist={setLanChecklist} addXp={addXp} />}
+        {tab === "lan" && <LanScreen checklist={lanChecklist} setChecklist={setLanChecklist} addXp={addXp} lanParties={lanParties} setLanParties={setLanParties} />}
         {tab === "profile" && (
           <ProfileScreen
             me={me}
@@ -422,6 +534,10 @@ function App() {
             selectedBadges={selectedBadges}
             setSelectedBadges={setSelectedBadges}
             notify={notify}
+            avatarImage={avatarImage}
+            setAvatarImage={setAvatarImage}
+            avatarPreset={avatarPreset}
+            setAvatarPreset={setAvatarPreset}
           />
         )}
 
@@ -508,13 +624,13 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
 
 function DiscoverScreen({ games, planGame }) {
   const [activeFilters, setActiveFilters] = useState(["All"]);
-  const [visibleCount, setVisibleCount] = useState(8);
+  const [visibleCount, setVisibleCount] = useState(14);
 
   const filters = ["All", "Survival", "Co-op", "PvE", "PvP", "Singleplayer", "LAN", "Quick", "Long", "RPG", "Horror", "Building"];
 
   const endlessGames = useMemo(() => {
     const suffixes = ["Squad Pick", "Weekend Pick", "LAN Candidate", "Backlog Revival", "Budget Alert"];
-    return Array.from({ length: 4 }).flatMap((_, loop) =>
+    return Array.from({ length: 8 }).flatMap((_, loop) =>
       games.map(game => ({
         ...game,
         id: game.id + loop * 100,
@@ -537,7 +653,7 @@ function DiscoverScreen({ games, planGame }) {
   const visibleGames = filtered.slice(0, visibleCount);
 
   function toggleFilter(filter) {
-    setVisibleCount(8);
+    setVisibleCount(14);
     if (filter === "All") {
       setActiveFilters(["All"]);
       return;
@@ -562,6 +678,9 @@ function DiscoverScreen({ games, planGame }) {
         body="Filter op Survival, Co-op, PvE, PvP, Singleplayer, LAN of korte sessies. Elke kaart toont speelmodus, prijs, ownership, matchscore en een langere beschrijving zodat je beter kunt kiezen."
       />
 
+      <SectionHeader title="Meest gespeeld vandaag" action="SteamDB mock" />
+      <SteamDbToday />
+
       <div className="filterBar">
         {filters.map(filter => (
           <button
@@ -584,7 +703,7 @@ function DiscoverScreen({ games, planGame }) {
       </div>
 
       {visibleCount < filtered.length ? (
-        <button className="wideButton" onClick={() => setVisibleCount(count => count + 6)}>
+        <button className="wideButton" onClick={() => setVisibleCount(count => count + 12)}>
           Meer games laden
         </button>
       ) : (
@@ -618,23 +737,91 @@ function PlanScreen({ events, setAttendance, setTab }) {
   );
 }
 
-function LanScreen({ checklist, setChecklist, addXp }) {
+function LanScreen({ checklist, setChecklist, addXp, lanParties, setLanParties }) {
   const done = checklist.filter(i => i.done).length;
   const pct = Math.round((done / checklist.length) * 100);
+  const [editingId, setEditingId] = useState(null);
+  const [form, setForm] = useState({ title: "Nieuwe LAN party", date: "Vrijdag 20:00", location: "TBD", food: "Pizza", note: "Games, food en gear nog bepalen" });
 
   function toggle(id) {
     setChecklist(prev => prev.map(item => item.id === id ? { ...item, done: !item.done } : item));
     addXp(12, "LAN checklist");
   }
 
+  function saveLanParty() {
+    if (!form.title.trim()) return;
+    if (editingId) {
+      setLanParties(prev => prev.map(party => party.id === editingId ? { ...party, ...form } : party));
+      addXp(20, "LAN party bewerkt");
+    } else {
+      setLanParties(prev => [{ id: Date.now(), attendees: 1, ...form }, ...prev]);
+      addXp(45, "LAN party toegevoegd");
+    }
+    setEditingId(null);
+    setForm({ title: "Nieuwe LAN party", date: "Vrijdag 20:00", location: "TBD", food: "Pizza", note: "Games, food en gear nog bepalen" });
+  }
+
+  function editParty(party) {
+    setEditingId(party.id);
+    setForm({ title: party.title, date: party.date, location: party.location, food: party.food, note: party.note });
+    document.getElementById("lan-editor")?.scrollIntoView({ behavior: "smooth" });
+  }
+
+  function deleteParty(id) {
+    setLanParties(prev => prev.filter(party => party.id !== id));
+    addXp(5, "LAN planning opgeschoond");
+  }
+
+  function joinParty(id) {
+    setLanParties(prev => prev.map(party => party.id === id ? { ...party, attendees: party.attendees + 1 } : party));
+    addXp(35, "LAN deelname bevestigd");
+  }
+
   return (
     <main className="screen">
       <section className="lanHero">
         <div className="kicker"><Laptop size={14} /> LAN party mode</div>
-        <h1>LAN weekend: 24-26 mei</h1>
-        <p>Gear, food, attendance, games en readiness in één compacte hub.</p>
-        <button className="primaryBtn" onClick={() => addXp(35, "LAN deelname bevestigd")}>Join LAN</button>
+        <h1>Plan, bewerk en beheer LAN parties.</h1>
+        <p>Duidelijke acties voor toevoegen, aanpassen, verwijderen en aanmelden. Geen verborgen menu’s.</p>
+        <button className="primaryBtn" onClick={() => document.getElementById("lan-editor")?.scrollIntoView({ behavior: "smooth" })}>Nieuwe LAN party</button>
       </section>
+
+      <SectionHeader title="LAN parties" action={`${lanParties.length} actief`} />
+      <div className="lanPartyStack">
+        {lanParties.map(party => (
+          <article className="lanPartyCard" key={party.id}>
+            <div className="split">
+              <div>
+                <h3>{party.title}</h3>
+                <p>{party.date} · {party.location}</p>
+              </div>
+              <span className="readyPill">{party.attendees} going</span>
+            </div>
+            <div className="lanPartyMeta">
+              <span>🍕 {party.food}</span>
+              <span>📝 {party.note}</span>
+            </div>
+            <div className="lanButtonGrid">
+              <button className="lanPrimary" onClick={() => joinParty(party.id)}>Join</button>
+              <button className="lanEdit" onClick={() => editParty(party)}><Edit3 size={15} /> Bewerk</button>
+              <button className="lanDelete" onClick={() => deleteParty(party.id)}><Trash2 size={15} /> Verwijder</button>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <article className="card lanEditor" id="lan-editor">
+        <div className="split">
+          <h3>{editingId ? "LAN party bewerken" : "LAN party toevoegen"}</h3>
+          {editingId && <button className="smallGhost" onClick={() => setEditingId(null)}>Annuleer</button>}
+        </div>
+        <input value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} placeholder="Naam LAN party" />
+        <input value={form.date} onChange={e => setForm({ ...form, date: e.target.value })} placeholder="Datum / tijd" />
+        <input value={form.location} onChange={e => setForm({ ...form, location: e.target.value })} placeholder="Locatie" />
+        <input value={form.food} onChange={e => setForm({ ...form, food: e.target.value })} placeholder="Food voorkeur" />
+        <textarea value={form.note} onChange={e => setForm({ ...form, note: e.target.value })} placeholder="Notitie" />
+        <button className="wideButton" onClick={saveLanParty}>{editingId ? "Wijzigingen opslaan" : "LAN party toevoegen"}</button>
+      </article>
 
       <article className="card">
         <div className="split">
@@ -663,7 +850,18 @@ function LanScreen({ checklist, setChecklist, addXp }) {
   );
 }
 
-function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify }) {
+function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, avatarImage, setAvatarImage, avatarPreset, setAvatarPreset }) {
+  function handleAvatarUpload(event) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setAvatarImage(reader.result);
+      notify("Profielplaatje ingesteld");
+    };
+    reader.readAsDataURL(file);
+  }
+
   function toggleBadge(id) {
     if (selectedBadges.includes(id)) {
       if (selectedBadges.length <= 1) return notify("Je moet minimaal 1 badge tonen");
@@ -678,7 +876,7 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify })
   return (
     <main className="screen">
       <section className="profileHero">
-        <div className="avatarHuge">S</div>
+        <div className="avatarHuge">{avatarImage ? <img src={avatarImage} alt="Avatar" /> : avatarPreset}</div>
         <div>
           <div className="kicker"><User size={14} /> Profile</div>
           <h1>{me.name}</h1>
@@ -693,6 +891,24 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify })
         <Stat value={`${me.ready}%`} label="Show-up" />
         <Stat value={me.discovery} label="Discoveries" />
       </div>
+
+      <SectionHeader title="Profielplaatje" action="Upload of kies" />
+      <article className="card avatarPicker">
+        <label className="uploadButton">
+          <Camera size={17} />
+          Eigen plaatje uploaden
+          <input type="file" accept="image/*" onChange={handleAvatarUpload} />
+        </label>
+        <div className="presetRow">
+          {["S", "🎮", "🛸", "🐉", "💀", "🚀"].map(preset => (
+            <button key={preset} className={avatarPreset === preset && !avatarImage ? "active" : ""} onClick={() => {
+              setAvatarImage("");
+              setAvatarPreset(preset);
+              notify("Avatar gekozen");
+            }}>{preset}</button>
+          ))}
+        </div>
+      </article>
 
       <SectionHeader title="Badge showcase" action={`${selectedBadges.length}/3 actief`} />
       <div className="badgeGrid">
@@ -735,6 +951,23 @@ function EventCard({ event, onAttendance }) {
         <button className={my === "maybe" ? "maybe active" : "maybe"} onClick={() => onAttendance("maybe")}>Maybe</button>
         <button className={my === "out" ? "out active" : "out"} onClick={() => onAttendance("out")}>Out</button>
       </div>
+    </article>
+  );
+}
+
+function SteamDbToday() {
+  return (
+    <article className="steamDbPanel">
+      {steamDbToday.map(game => (
+        <div className="steamDbRow" key={game.rank}>
+          <strong>#{game.rank}</strong>
+          <div>
+            <b>{game.name}</b>
+            <span>{game.tag} · {game.mode}</span>
+          </div>
+          <em>{game.current}</em>
+        </div>
+      ))}
     </article>
   );
 }
