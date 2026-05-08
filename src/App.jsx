@@ -391,6 +391,14 @@ function App() {
   ]);
   const [avatarImage, setAvatarImage] = useState("");
   const [avatarPreset, setAvatarPreset] = useState("S");
+  const [userGameStatus, setUserGameStatus] = useState({});
+  const [linkedAccounts, setLinkedAccounts] = useState({
+    steam: false,
+    discord: true,
+    microsoft: false,
+    google: false,
+    apple: false
+  });
 
   function notify(message) {
     setToast(message);
@@ -500,7 +508,7 @@ function App() {
             <div className="brandIcon"><Gamepad2 size={22} /></div>
             <div>
               <strong>SquadUp<span>.gg</span></strong>
-              <small>v0.13 · Friday Squad</small>
+              <small>v0.16 · Friday Squad</small>
             </div>
           </button>
           <button className="iconButton" onClick={simulatePurchase}><ShoppingBag size={19} /></button>
@@ -524,7 +532,7 @@ function App() {
           />
         )}
 
-        {tab === "discover" && <DiscoverScreen games={discoverGames} planGame={planGame} />}
+        {tab === "discover" && <DiscoverScreen games={discoverGames} planGame={planGame} userGameStatus={userGameStatus} setUserGameStatus={setUserGameStatus} addXp={addXp} />}
         {tab === "plan" && <PlanScreen events={events} setAttendance={setAttendance} setTab={setTab} />}
         {tab === "lan" && <LanScreen checklist={lanChecklist} setChecklist={setLanChecklist} addXp={addXp} lanParties={lanParties} setLanParties={setLanParties} />}
         {tab === "profile" && (
@@ -538,6 +546,9 @@ function App() {
             setAvatarImage={setAvatarImage}
             avatarPreset={avatarPreset}
             setAvatarPreset={setAvatarPreset}
+            linkedAccounts={linkedAccounts}
+            setLinkedAccounts={setLinkedAccounts}
+            addXp={addXp}
           />
         )}
 
@@ -622,7 +633,7 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
   );
 }
 
-function DiscoverScreen({ games, planGame }) {
+function DiscoverScreen({ games, planGame, userGameStatus, setUserGameStatus, addXp }) {
   const [activeFilters, setActiveFilters] = useState(["All"]);
   const [visibleCount, setVisibleCount] = useState(14);
 
@@ -678,9 +689,6 @@ function DiscoverScreen({ games, planGame }) {
         body="Filter op Survival, Co-op, PvE, PvP, Singleplayer, LAN of korte sessies. Elke kaart toont speelmodus, prijs, ownership, matchscore en een langere beschrijving zodat je beter kunt kiezen."
       />
 
-      <SectionHeader title="Meest gespeeld vandaag" action="SteamDB mock" />
-      <SteamDbToday />
-
       <div className="filterBar">
         {filters.map(filter => (
           <button
@@ -699,7 +707,7 @@ function DiscoverScreen({ games, planGame }) {
       </div>
 
       <div className="discoverGrid">
-        {visibleGames.map(game => <SteamGameCard key={game.id} game={game} onPlan={() => planGame(game)} />)}
+        {visibleGames.map(game => <SteamGameCard key={game.id} game={game} onPlan={() => planGame(game)} userStatus={userGameStatus[game.name] || { owned: false, wishlist: false, installed: false, active: false }} onToggle={(field) => { setUserGameStatus(prev => ({ ...prev, [game.name]: { ...(prev[game.name] || { owned: false, wishlist: false, installed: false, active: false }), [field]: !(prev[game.name]?.[field]) } })); addXp(10, "Game status bijgewerkt"); }} />)}
       </div>
 
       {visibleCount < filtered.length ? (
@@ -850,7 +858,7 @@ function LanScreen({ checklist, setChecklist, addXp, lanParties, setLanParties }
   );
 }
 
-function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, avatarImage, setAvatarImage, avatarPreset, setAvatarPreset }) {
+function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, avatarImage, setAvatarImage, avatarPreset, setAvatarPreset, linkedAccounts, setLinkedAccounts, addXp }) {
   function handleAvatarUpload(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -860,6 +868,11 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, a
       notify("Profielplaatje ingesteld");
     };
     reader.readAsDataURL(file);
+  }
+
+  function toggleAccount(key) {
+    setLinkedAccounts(prev => ({ ...prev, [key]: !prev[key] }));
+    addXp(linkedAccounts[key] ? 5 : 35, linkedAccounts[key] ? "Account ontkoppeld" : "Account gekoppeld");
   }
 
   function toggleBadge(id) {
@@ -910,6 +923,15 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, a
         </div>
       </article>
 
+      <SectionHeader title="Accounts koppelen" action="Sync hub" />
+      <article className="card accountHub">
+        <AccountButton platform="steam" title="Steam" subtitle="Owned games, playtime, wishlist" linked={linkedAccounts.steam} onClick={() => toggleAccount("steam")} />
+        <AccountButton platform="discord" title="Discord" subtitle="Presence, voice, squad invites" linked={linkedAccounts.discord} onClick={() => toggleAccount("discord")} />
+        <AccountButton platform="microsoft" title="Microsoft / Xbox" subtitle="Xbox identity en Game Pass later" linked={linkedAccounts.microsoft} onClick={() => toggleAccount("microsoft")} />
+        <AccountButton platform="google" title="Google" subtitle="Snelle login en calendar later" linked={linkedAccounts.google} onClick={() => toggleAccount("google")} />
+        <AccountButton platform="apple" title="Apple" subtitle="Private login voor iOS users" linked={linkedAccounts.apple} onClick={() => toggleAccount("apple")} />
+      </article>
+
       <SectionHeader title="Badge showcase" action={`${selectedBadges.length}/3 actief`} />
       <div className="badgeGrid">
         {badgeLibrary.map(badge => (
@@ -925,6 +947,27 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, a
       <SectionHeader title="Squad leaderboard" action="XP" />
       <Leaderboard squad={squad} />
     </main>
+  );
+}
+
+function AccountButton({ platform, title, subtitle, linked, onClick }) {
+  const icons = {
+    steam: "🎮",
+    discord: "🟣",
+    microsoft: "🟩",
+    google: "G",
+    apple: ""
+  };
+
+  return (
+    <button className={`accountButton ${platform} ${linked ? "linked" : ""}`} onClick={onClick}>
+      <span className="accountIcon">{icons[platform]}</span>
+      <div>
+        <strong>{linked ? `${title} gekoppeld` : `Koppel ${title}`}</strong>
+        <small>{subtitle}</small>
+      </div>
+      <em>{linked ? "Connected" : "Connect"}</em>
+    </button>
   );
 }
 
@@ -972,11 +1015,33 @@ function SteamDbToday() {
   );
 }
 
-function SteamGameCard({ game, onPlan }) {
+function SteamGameCard({ game, onPlan, userStatus, onToggle }) {
+  const squad = game.squadStatus || {
+    owned: game.owned?.startsWith("5/5") ? 5 : game.owned?.startsWith("4/5") ? 4 : game.owned?.startsWith("3/5") ? 3 : 2,
+    wishlist: 2,
+    installed: 2,
+    active: 0
+  };
+
+  const steamRank = game.steamRank || (
+    game.name === "Counter-Strike 2" ? 1 :
+    game.name === "Dota 2" ? 2 :
+    game.name === "PUBG: BATTLEGROUNDS" ? 3 :
+    game.name === "Apex Legends" ? 4 :
+    game.name === "Rust" ? 5 :
+    game.name === "Deep Rock Galactic" ? 28 :
+    null
+  );
+
+  const readiness = Math.min(99, Math.round(game.score * 0.55 + squad.owned * 6 + squad.installed * 5 + squad.active * 4));
+
   return (
     <article className="steamCard">
       <div className="steamArt" style={{ backgroundImage: game.image }}>
-        <span className="modePill">{game.mode}</span>
+        <div className="artTopBadges">
+          <span className="modePill">{game.mode}</span>
+          {steamRank && <span className="steamRank">#{steamRank} Steam Today</span>}
+        </div>
         <div className="steamScore">{game.score}%</div>
       </div>
       <div className="steamBody">
@@ -993,7 +1058,28 @@ function SteamGameCard({ game, onPlan }) {
           ))}
         </div>
 
+        <div className="readinessPanel">
+          <div className="split">
+            <span>Squad readiness</span>
+            <b>{readiness}%</b>
+          </div>
+          <div className="progress"><span style={{ width: `${readiness}%` }} /></div>
+          <div className="squadSignals">
+            <span>👥 {squad.owned} own</span>
+            <span>⭐ {squad.wishlist} want</span>
+            <span>⬇ {squad.installed} installed</span>
+            <span>🔥 {squad.active} active</span>
+          </div>
+        </div>
+
         <p className="gameDesc">{game.desc}</p>
+
+        <div className="ownershipToggles">
+          <button className={userStatus.owned ? "owned active" : "owned"} onClick={() => onToggle("owned")}>✓ Owned</button>
+          <button className={userStatus.wishlist ? "wishlist active" : "wishlist"} onClick={() => onToggle("wishlist")}>★ Want</button>
+          <button className={userStatus.installed ? "installed active" : "installed"} onClick={() => onToggle("installed")}>⬇ Installed</button>
+          <button className={userStatus.active ? "activeNow active" : "activeNow"} onClick={() => onToggle("active")}>🔥 Active</button>
+        </div>
 
         <div className="tagRow">{game.tags.map(t => <span key={t}>{t}</span>)}</div>
         <div className="buyRow">

@@ -1,14 +1,15 @@
-# SquadUp.gg v0.15
+# SquadUp.gg v0.16
 
 Nieuwe upgrade:
-- LAN parties toevoegen, bewerken, joinen en verwijderen met duidelijke buttons
-- Profielplaatje uploaden of preset kiezen
-- Meer recommended games in Discover
-- Grotere infinite-scroll mock catalogus
-- SteamDB Today sectie met meest gespeelde games van vandaag als live-ready mock module
-- Meer discovery filters en langere gamebeschrijvingen
+- SteamDB Today lijst niet meer prominent bovenaan
+- Steam ranking subtiel geïntegreerd op gamekaarten
+- Per game duidelijke statusbuttons: Owned, Want, Installed, Active
+- Squad readiness met own/want/installed/active signalen
+- Profiel heeft account linking cards voor Steam, Discord, Microsoft/Xbox, Google en Apple
+- Avatar upload/preset uit v0.15 behouden
+- LAN CRUD uit v0.15 behouden
 
-Let op: SteamDB heeft publieke charts, maar voor echte live data in productie moet dit via een backend/proxy of externe data API worden gekoppeld. Niet rechtstreeks vanuit de frontend scrapen.
+Let op: account linking is nu UI/mock. Voor echte Steam/Discord/Microsoft/Google/Apple koppelingen is backend OAuth nodig.
 
 ## Run lokaal
 
