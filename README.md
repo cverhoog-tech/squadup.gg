@@ -1,15 +1,12 @@
-{
-  "scripts": {
-    "dev": "vite --host 0.0.0.0",
-    "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
-  },
-  "dependencies": {
-    "@vitejs/plugin-react": "latest",
-    "vite": "latest",
-    "react": "latest",
-    "react-dom": "latest",
-    "lucide-react": "latest"
-  },
-  "devDependencies": {}
-}
+# SquadUp.gg v0.19.1
+
+Hotfix voor de layout-engine build.
+
+Bevat:
+- 10 layout modes
+- gefixte HomeScreen render
+- veiliger Vercel build
+
+## Deploy
+
+Upload de uitgepakte bestanden naar GitHub en commit. Vercel redeployt automatisch.

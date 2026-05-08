@@ -574,7 +574,7 @@ function App() {
             <div className="brandIcon"><Gamepad2 size={22} /></div>
             <div>
               <strong>SquadUp<span>.gg</span></strong>
-              <small>v0.19 · Friday Squad</small>
+              <small>v0.19.1 · Friday Squad</small>
             </div>
           </button>
           <button className="iconButton" onClick={simulatePurchase}><ShoppingBag size={19} /></button>
