@@ -308,6 +308,16 @@ const moodOptions = ["Chill", "Competitive", "Horror", "Survival", "Quick", "Lon
 const lengthOptions = ["30-60 min", "1-2 uur", "All night", "LAN weekend"];
 
 
+const themeOptions = [
+  { id: "neon", name: "Neon Command", vibe: "Cinematic dashboard met grote hero, glows en premium gaming cards.", unlock: "Default" },
+  { id: "deck", name: "Steam Deck", vibe: "Compacte console layout met bredere kaarten, minder tekstdruk en stevige controls.", unlock: "Level 5" },
+  { id: "arcade", name: "Cyber Arcade", vibe: "Felle arcade-look met chunky buttons, speelse borders en meer energy.", unlock: "10 game nights" },
+  { id: "cozy", name: "Cozy Quest", vibe: "Warme fantasy/social vibe met zachtere panelen, rustige cards en meer overzicht.", unlock: "3 long adventures" },
+  { id: "minimal", name: "Minimal Pro", vibe: "Strakke utility-layout met minder glow, duidelijke lijsten en snelle planning.", unlock: "Productivity mode" }
+];
+
+
+
 const initialEvents = [
   {
     id: 1,
@@ -418,6 +428,7 @@ function App() {
   const [myAvailability, setMyAvailability] = useState("yes");
   const [squadMood, setSquadMood] = useState("Quick");
   const [sessionLength, setSessionLength] = useState("1-2 uur");
+  const [activeTheme, setActiveTheme] = useState("neon");
 
   function notify(message) {
     setToast(message);
@@ -552,13 +563,13 @@ function App() {
 
   return (
     <div className="shell">
-      <div className="app">
+      <div className={`app theme-${activeTheme}`}>
         <header className="topbar">
           <button className="brand" onClick={() => setTab("home")}>
             <div className="brandIcon"><Gamepad2 size={22} /></div>
             <div>
               <strong>SquadUp<span>.gg</span></strong>
-              <small>v0.17 · Friday Squad</small>
+              <small>v0.18 · Friday Squad</small>
             </div>
           </button>
           <button className="iconButton" onClick={simulatePurchase}><ShoppingBag size={19} /></button>
@@ -588,6 +599,7 @@ function App() {
             sessionLength={sessionLength}
             setSessionLength={setSessionLength}
             tonightPicks={getTonightPicks()}
+            activeTheme={activeTheme}
           />
         )}
 
@@ -608,6 +620,8 @@ function App() {
             linkedAccounts={linkedAccounts}
             setLinkedAccounts={setLinkedAccounts}
             addXp={addXp}
+            activeTheme={activeTheme}
+            setActiveTheme={setActiveTheme}
           />
         )}
 
@@ -635,7 +649,7 @@ function App() {
   );
 }
 
-function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFeed, squad, me, selectedBadges, planGame, setTab, notify, addXp, presence, cyclePresence, myAvailability, setAvailability, squadMood, setSquadMood, sessionLength, setSessionLength, tonightPicks }) {
+function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFeed, squad, me, selectedBadges, planGame, setTab, notify, addXp, presence, cyclePresence, myAvailability, setAvailability, squadMood, setSquadMood, sessionLength, setSessionLength, tonightPicks, activeTheme }) {
   const slide = slides[selectedHero];
 
   function react(id) {
@@ -657,6 +671,12 @@ function HomeScreen({ slides, selectedHero, setSelectedHero, event, feed, setFee
           ))}
         </div>
       </section>
+
+      <article className="themeIdentity">
+        <span>Active layout theme</span>
+        <strong>{themeOptions.find(t => t.id === activeTheme)?.name}</strong>
+      </article>
+
 
       <section className="identityCard">
         <div className="avatarBig">S</div>
@@ -1005,7 +1025,7 @@ function LanScreen({ checklist, setChecklist, addXp, lanParties, setLanParties }
   );
 }
 
-function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, avatarImage, setAvatarImage, avatarPreset, setAvatarPreset, linkedAccounts, setLinkedAccounts, addXp }) {
+function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, avatarImage, setAvatarImage, avatarPreset, setAvatarPreset, linkedAccounts, setLinkedAccounts, addXp, activeTheme, setActiveTheme }) {
   function handleAvatarUpload(event) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -1068,6 +1088,25 @@ function ProfileScreen({ me, squad, selectedBadges, setSelectedBadges, notify, a
             }}>{preset}</button>
           ))}
         </div>
+      </article>
+
+      <SectionHeader title="Layout themes" action="Verandert structuur" />
+      <article className="card themePicker">
+        {themeOptions.map(theme => (
+          <button key={theme.id} className={`themeOption ${theme.id} ${activeTheme === theme.id ? "active" : ""}`} onClick={() => {
+            setActiveTheme(theme.id);
+            notify(`${theme.name} actief`);
+          }}>
+            <div className="themePreview">
+              <i></i><i></i><i></i>
+            </div>
+            <div>
+              <strong>{theme.name}</strong>
+              <p>{theme.vibe}</p>
+              <em>{theme.unlock}</em>
+            </div>
+          </button>
+        ))}
       </article>
 
       <SectionHeader title="Accounts koppelen" action="Sync hub" />

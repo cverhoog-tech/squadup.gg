@@ -1,17 +1,22 @@
-# SquadUp.gg v0.17
+# SquadUp.gg v0.18
 
 Nieuwe upgrade:
-- Live Squad Presence op Home
-- Online / playing / voice / idle / offline status
-- Zien wat vrienden spelen
-- Refresh mock voor presence updates
-- Available Tonight quick toggle
-- Squad mood voting
-- Session length selector
-- Smart Tonight Picks op basis van mood, sessielengte, online members en game metadata
-- Alle v0.16 features behouden: account linking UI, game ownership toggles, Steam ranking in cards, LAN CRUD, avatar upload
-
-Let op: live presence is nu mock state. Echte online status vereist backend realtime presence + Steam/Discord API koppelingen.
+- Layout themes die meer veranderen dan kleuren
+- Theme picker in profiel
+- 5 thema's:
+  - Neon Command
+  - Steam Deck
+  - Cyber Arcade
+  - Cozy Quest
+  - Minimal Pro
+- Thema verandert:
+  - kaartvormen
+  - buttonstijl
+  - spacing
+  - herohoogte
+  - navigatiegevoel
+  - glow/contrast
+  - card density
 
 ## Run lokaal
 

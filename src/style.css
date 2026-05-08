@@ -1492,3 +1492,197 @@ p {
   color: var(--accent2);
   font-weight: 1000;
 }
+
+
+/* v0.18 structural layout themes */
+.themeIdentity {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.09);
+}
+.themeIdentity span { color: var(--muted); font-size: 12px; font-weight: 900; }
+.themeIdentity strong { color: var(--accent2); font-size: 12px; }
+
+.themePicker { display: grid; gap: 10px; }
+.themeOption {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 86px 1fr;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 22px;
+  background: rgba(255,255,255,.055);
+  border: 1px solid rgba(255,255,255,.09);
+  text-align: left;
+}
+.themeOption.active {
+  border-color: rgba(0,228,168,.45);
+  background: linear-gradient(135deg, rgba(0,228,168,.11), rgba(125,92,255,.08));
+}
+.themeOption strong { display: block; margin-bottom: 4px; }
+.themeOption p { font-size: 12px; }
+.themeOption em {
+  display: inline-block;
+  margin-top: 8px;
+  font-style: normal;
+  color: var(--accent2);
+  font-size: 11px;
+  font-weight: 1000;
+}
+.themePreview {
+  height: 72px;
+  padding: 9px;
+  border-radius: 18px;
+  display: grid;
+  gap: 6px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.08);
+}
+.themePreview i { display: block; border-radius: 999px; background: rgba(255,255,255,.24); }
+.themeOption.neon .themePreview { background: radial-gradient(circle at top right, rgba(0,228,168,.35), transparent 35%), linear-gradient(135deg, rgba(125,92,255,.6), rgba(18,24,46,.9)); }
+.themeOption.deck .themePreview { background: linear-gradient(135deg, #182735, #0d151f); }
+.themeOption.arcade .themePreview { background: linear-gradient(135deg, #ff3df2, #00e4a8); }
+.themeOption.cozy .themePreview { background: linear-gradient(135deg, #7b4d2c, #ffc857); }
+.themeOption.minimal .themePreview { background: linear-gradient(135deg, #202532, #f4f6ff); }
+
+/* Steam Deck: compact console layout */
+.theme-deck {
+  --accent: #1ea7ff;
+  --accent2: #67f5d0;
+  --panel: rgba(11, 22, 32, .94);
+  --radius: 18px;
+}
+.theme-deck .screen { padding-left: 12px; padding-right: 12px; }
+.theme-deck .heroCarousel { min-height: 210px; border-radius: 20px; display: grid; align-content: end; }
+.theme-deck .heroIcon { font-size: 52px; right: 16px; }
+.theme-deck .identityCard,
+.theme-deck .presencePanel,
+.theme-deck .availabilityPanel,
+.theme-deck .eventCard,
+.theme-deck .feedCard,
+.theme-deck .steamCard,
+.theme-deck .leaderboard,
+.theme-deck .card { border-radius: 18px; }
+.theme-deck .bottomNav { padding-top: 6px; }
+.theme-deck .bottomNav button { border-radius: 12px; }
+.theme-deck .steamArt { min-height: 150px; }
+
+/* Cyber Arcade: chunky and playful */
+.theme-arcade {
+  --accent: #ff3df2;
+  --accent2: #00ffb7;
+  --yellow: #fff04a;
+  --radius: 14px;
+}
+.theme-arcade {
+  background:
+    linear-gradient(90deg, rgba(255,61,242,.05) 1px, transparent 1px),
+    linear-gradient(180deg, rgba(0,255,183,.05) 1px, transparent 1px),
+    rgba(7,10,20,.9);
+  background-size: 24px 24px;
+}
+.theme-arcade .heroCarousel,
+.theme-arcade .pageHeader,
+.theme-arcade .lanHero,
+.theme-arcade .profileHero {
+  border: 2px solid rgba(255,255,255,.18);
+  box-shadow: 0 0 0 4px rgba(255,61,242,.08), 0 22px 60px rgba(0,0,0,.38);
+}
+.theme-arcade .primaryBtn,
+.theme-arcade .wideButton,
+.theme-arcade .fab {
+  border-radius: 12px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.theme-arcade .actionTriad button,
+.theme-arcade .availabilityButtons button,
+.theme-arcade .ownershipToggles button {
+  border-radius: 10px;
+  min-height: 48px;
+}
+.theme-arcade .sectionHeader h2 { text-transform: uppercase; letter-spacing: .04em; }
+.theme-arcade .steamArt { min-height: 230px; }
+
+/* Cozy Quest: softer warmer layout */
+.theme-cozy {
+  --bg: #17100d;
+  --panel: rgba(44, 31, 24, .92);
+  --accent: #d98c46;
+  --accent2: #ffd68a;
+  --yellow: #ffe09a;
+  --muted: #cbb9a0;
+  --radius: 28px;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(255,214,138,.18), transparent 32%),
+    linear-gradient(180deg, rgba(38,25,19,.96), rgba(18,12,10,.98));
+}
+.theme-cozy .heroCarousel,
+.theme-cozy .pageHeader,
+.theme-cozy .lanHero,
+.theme-cozy .profileHero {
+  min-height: 250px;
+  background: linear-gradient(135deg, rgba(116,71,39,.72), rgba(255,214,138,.13)), var(--panel);
+}
+.theme-cozy .bottomNav { background: rgba(24,15,12,.94); }
+.theme-cozy .badgeShowcase span,
+.theme-cozy .tagRow span,
+.theme-cozy .tonightSignals span { background: rgba(255,214,138,.10); }
+.theme-cozy .steamBody { gap: 16px; }
+
+/* Minimal Pro: less glow, more list/productivity */
+.theme-minimal {
+  --panel: rgba(246,248,255,.96);
+  --text: #101522;
+  --muted: #647086;
+  --accent: #2f5cff;
+  --accent2: #087f5b;
+  --line: rgba(12,18,32,.12);
+  --radius: 14px;
+  background: #eef2f8;
+  color: var(--text);
+}
+.theme-minimal .topbar,
+.theme-minimal .bottomNav {
+  background: rgba(246,248,255,.92);
+  border-color: rgba(12,18,32,.10);
+}
+.theme-minimal .brand small,
+.theme-minimal p,
+.theme-minimal .muted,
+.theme-minimal .sectionHeader span,
+.theme-minimal .presenceCard span,
+.theme-minimal .presenceSummary span { color: var(--muted); }
+.theme-minimal .heroCarousel {
+  min-height: 190px;
+  background: #fff;
+  box-shadow: none;
+}
+.theme-minimal .heroIcon { opacity: .28; }
+.theme-minimal .identityCard,
+.theme-minimal .presencePanel,
+.theme-minimal .availabilityPanel,
+.theme-minimal .eventCard,
+.theme-minimal .feedCard,
+.theme-minimal .steamCard,
+.theme-minimal .leaderboard,
+.theme-minimal .card {
+  box-shadow: none;
+  background: #fff;
+}
+.theme-minimal .bottomNav button.active {
+  background: rgba(47,92,255,.10);
+  color: #173bba;
+}
+.theme-minimal .primaryBtn,
+.theme-minimal .wideButton,
+.theme-minimal .fab { box-shadow: none; }
+.theme-minimal .screen { padding-top: 10px; }
+.theme-minimal .discoverGrid { gap: 8px; }
+.theme-minimal .steamArt { min-height: 130px; }
+.theme-minimal .gameDesc { color: #344054; }
