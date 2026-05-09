@@ -1,16 +1,18 @@
-# SquadUp.gg v0.21
+# SquadUp.gg v0.23
 
-Game artwork layer toegevoegd.
-
-Nieuw:
-- Game cards laden visuele artwork via image URLs
-- Layouts voelen dichter bij de conceptafbeelding door echte game imagery
-- GameArtWall component toegevoegd
-- Carousel Focus gebruikt grote artwork slides
-- Mock data staat klaar om later te vervangen door Steam/IGDB/RAWG data
-
-Let op:
-De afbeeldingen zijn nu placeholder/image-URL data. Voor echte game covers/screenshots wil je later een backend koppelen aan bijvoorbeeld Steam Store data, IGDB of RAWG.
+Merge build:
+- Cozy Quest en Minimal Pro verwijderd uit layout selector
+- Default start op Carousel Focus
+- First-open style intro picker met Full Immersion / Carousel Focus
+- Character-style avatars voor squadleden
+- Klikbare gebruikersprofielen
+- Profielmodal met archetype, level, badges, bio en current game
+- Invite to party / Tag for queue acties
+- Instant Queue overlay: NU een potje?
+- Tag specifieke squadleden
+- Tactile button animaties en hover/click feedback
+- Desktop fullscreen command center behouden
+- Mobile visual layouts behouden
 
 ## Run
 

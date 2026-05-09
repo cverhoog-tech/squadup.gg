@@ -23,21 +23,78 @@ const layouts = [
   ["neon", "1. Neon Command", "Futuristic · Bold · Neon"],
   ["deck", "2. Steam Deck", "Clean · Console · Focused"],
   ["arcade", "3. Cyber Arcade", "Vibrant · Playful · Retro"],
-  ["cozy", "4. Cozy Quest", "Warm · Friendly · Adventure"],
-  ["lan", "5. LAN Party", "Retro · Bold · Hardware"],
-  ["minimal", "6. Minimal Pro", "Minimal · Clean · Efficient"],
-  ["grid", "7. Grid Command", "Data · Tactical · Structured"],
-  ["carousel", "8. Carousel Focus", "Visual · Immersive · Media First"],
-  ["sidenav", "9. Side Nav Command", "Command Center · Dashboard"],
-  ["immersion", "10. Full Immersion", "Cinematic · Fullscreen · Story Driven"]
+  ["lan", "4. LAN Party", "Retro · Bold · Hardware"],
+  ["grid", "5. Grid Command", "Data · Tactical · Structured"],
+  ["carousel", "6. Carousel Focus", "Visual · Immersive · Media First"],
+  ["sidenav", "7. Side Nav Command", "Command Center · Dashboard"],
+  ["immersion", "8. Full Immersion", "Cinematic · Fullscreen · Story Driven"]
 ];
 
 const squad = [
-  { name: "Kevin", status: "Playing", avatar: "K", game: "Helldivers 2" },
-  { name: "Tom", status: "In Game", avatar: "T", game: "Deep Rock" },
-  { name: "Sven", status: "In Voice", avatar: "S", game: "Discord" },
-  { name: "Shane", status: "Idle", avatar: "S", game: "SquadUp" },
-  { name: "Lars", status: "Online", avatar: "L", game: "Steam" }
+  {
+    name: "Kevin",
+    status: "Playing",
+    avatar: "🛡️",
+    archetype: "Tactical Vanguard",
+    level: 18,
+    badges: ["Reliable", "Shield Wall", "No Fear"],
+    game: "Helldivers 2",
+    availability: "Ready tonight",
+    bio: "Altijd als eerste in de lobby en meestal ook als eerste dood."
+  },
+  {
+    name: "Tom",
+    status: "In Game",
+    avatar: "🧙",
+    archetype: "Arcane Strategist",
+    level: 16,
+    badges: ["Planner", "Backlog Mage", "Lore Brain"],
+    game: "Deep Rock",
+    availability: "Maybe",
+    bio: "Maakt spreadsheets voor survival bases en noemt dat casual play."
+  },
+  {
+    name: "Sven",
+    status: "In Voice",
+    avatar: "🤖",
+    archetype: "LAN Engineer",
+    level: 14,
+    badges: ["Cable Goblin", "Setup Wizard", "Tech Support"],
+    game: "Discord",
+    availability: "Online",
+    bio: "Heeft altijd een extra kabel, maar nooit de juiste."
+  },
+  {
+    name: "Shane",
+    status: "Idle",
+    avatar: "🚀",
+    archetype: "Squad Captain",
+    level: 21,
+    badges: ["Pathfinder", "LAN Lord", "Hype Driver"],
+    game: "SquadUp",
+    availability: "Ready tonight",
+    bio: "Start het avontuur, plant de chaos en vergeet soms de snacks."
+  },
+  {
+    name: "Lars",
+    status: "Online",
+    avatar: "🐺",
+    archetype: "Chaos Ranger",
+    level: 12,
+    badges: ["Friendly Fire", "Loot Goblin", "Last Minute"],
+    game: "Steam",
+    availability: "Busy later",
+    bio: "Komt binnen met nul context en maakt het toch legendarisch."
+  }
+];
+
+const avatarPool = [
+  "🛡️","🧙","🤖","🚀","🐺","🐉","👾","🦾","🧟","🧛","🧝","🧌","🦊","🦁","🐲","🦅","🦇","🦂","🦄","🦖",
+  "⚔️","🏹","🔮","💀","☠️","👑","🧠","🧪","🔧","💣","🪓","🗡️","🛸","🛰️","🕹️","🎮","🎯","🔥","⚡","🌙",
+  "🪐","🌌","🧊","🌋","🌲","🏴‍☠️","🥷","🕵️","🧑‍🚀","🧑‍🔧","🧑‍💻","🧑‍🎤","🧑‍🚒","🧑‍✈️","🧑‍🎨","🧑‍🔬",
+  "🐸","🐼","🐵","🐧","🦉","🦈","🐙","🦀","🦥","🦦","🦔","🐢","🐍","🦎","🦕","🦣","🦭","🦜","🦚","🦡",
+  "🥷🏻","🥷🏽","🧙‍♂️","🧙‍♀️","🧝‍♂️","🧝‍♀️","🧛‍♂️","🧛‍♀️","🧟‍♂️","🧟‍♀️","🦸","🦹","🧞","🧚","🧜","🧌",
+  "🛡","⚙️","🧲","🪬","🧿","💎","🏆","🎲","🃏","♟️","🧩","🪄","🕶️","🥽","🎧","📡","💾","🖥️","⌨️","🖱️"
 ];
 
 const picks = [
@@ -94,15 +151,17 @@ const picks = [
 ];
 
 export default function App() {
-  const [layout, setLayout] = useState("neon");
+  const [layout, setLayout] = useState("carousel");
   const [toast, setToast] = useState("");
+  const [selectedUser, setSelectedUser] = useState(null);
+  const [queueOpen, setQueueOpen] = useState(false);
+  const [introOpen, setIntroOpen] = useState(true);
+  const [chosenAvatar, setChosenAvatar] = useState("🚀");
   const Current = {
     neon: NeonCommand,
     deck: SteamDeck,
     arcade: CyberArcade,
-    cozy: CozyQuest,
     lan: LanParty,
-    minimal: MinimalPro,
     grid: GridCommand,
     carousel: CarouselFocus,
     sidenav: SideNavCommand,
@@ -122,23 +181,27 @@ export default function App() {
           <button key={id} className={layout === id ? "active" : ""} onClick={() => setLayout(id)}>{title.replace(/^\d+\.\s/, "")}</button>
         ))}
       </div>
+      <DesktopCommandCenter layout={layout} setLayout={setLayout} notify={notify} openProfile={setSelectedUser} openQueue={() => setQueueOpen(true)} />
       <div className={`phone ${layout}`}>
-        <Current notify={notify} setLayout={setLayout} />
+        <Current notify={notify} setLayout={setLayout} openProfile={setSelectedUser} openQueue={() => setQueueOpen(true)} />
       </div>
+      {introOpen && <IntroThemePicker setLayout={setLayout} close={() => setIntroOpen(false)} />}
+      {selectedUser && <UserProfileModal user={selectedUser} close={() => setSelectedUser(null)} notify={notify} />}
+      {queueOpen && <InstantQueueOverlay close={() => setQueueOpen(false)} notify={notify} />}
       <div className={`toast ${toast ? "show" : ""}`}>{toast}</div>
     </div>
   );
 }
 
-function SquadRow({ compact = false }) {
+function SquadRow({ compact = false, openProfile = () => {} }) {
   return (
     <div className={compact ? "squadRow compact" : "squadRow"}>
       {squad.map(member => (
-        <div className="squadMember" key={member.name}>
-          <div className="avatar">{member.avatar}</div>
+        <button className="squadMember" key={member.name} onClick={() => openProfile(member)}>
+          <div className="avatar characterAvatar">{member.avatar}</div>
           <strong>{member.name}</strong>
           <span>{member.status}</span>
-        </div>
+        </button>
       ))}
     </div>
   );
@@ -199,13 +262,13 @@ function TopBar({ title = "SQUADUP.GG", centered = false }) {
   );
 }
 
-function NeonCommand({ notify }) {
+function NeonCommand({ notify, openProfile, openQueue } {
   return (
     <main className="screen neonScreen">
       <TopBar />
       <section className="squadOnline">
         <p>SQUAD ONLINE</p>
-        <SquadRow />
+        <SquadRow openProfile={openProfile} />
       </section>
       <section className="neonQuestion">
         <div>
@@ -213,7 +276,7 @@ function NeonCommand({ notify }) {
           <h1>TONIGHT?</h1>
           <p>Get smart picks based on who's online</p>
         </div>
-        <button onClick={() => notify("Smart match gestart")}><ChevronRight /></button>
+        <button onClick={openQueue}><ChevronRight /></button>
       </section>
       <GameArtWall compact />
       <h3 className="label">TONIGHT\'S PICKS</h3>
@@ -223,7 +286,7 @@ function NeonCommand({ notify }) {
   );
 }
 
-function SteamDeck({ notify }) {
+function SteamDeck({ notify, openProfile, openQueue } {
   return (
     <main className="deckShell">
       <aside className="deckRail">
@@ -238,7 +301,7 @@ function SteamDeck({ notify }) {
         <TopBar />
         <h2>Good evening, Kevin</h2>
         <p className="muted">Squad Online</p>
-        <SquadRow compact />
+        <SquadRow compact openProfile={openProfile} />
         <div className="continueCard">
           <div className="thumb heroB"></div>
           <div>
@@ -256,13 +319,13 @@ function SteamDeck({ notify }) {
   );
 }
 
-function CyberArcade({ notify }) {
+function CyberArcade({ notify, openProfile, openQueue } {
   return (
     <main className="screen arcadeScreen">
       <TopBar title="☠ SQUADUP.GG" />
       <section className="arcadeStatus">
         <p>SQUAD STATUS</p>
-        <SquadRow />
+        <SquadRow openProfile={openProfile} />
       </section>
       <section className="arcadeStart">
         <h1>WHAT WE PLAYING<br/>TONIGHT?</h1>
@@ -277,13 +340,13 @@ function CyberArcade({ notify }) {
   );
 }
 
-function CozyQuest({ notify }) {
+function CozyQuest({ notify, openProfile, openQueue }) {
   return (
     <main className="screen cozyScreen">
       <header className="cozyTop"><Menu size={18}/><strong>SquadUp.gg</strong><User size={18}/></header>
       <section className="cozyPaper">
         <span>Your Squad</span>
-        <SquadRow />
+        <SquadRow openProfile={openProfile} />
       </section>
       <section className="cozyHero">
         <h1>What shall we play tonight?</h1>
@@ -298,13 +361,13 @@ function CozyQuest({ notify }) {
   );
 }
 
-function LanParty({ notify }) {
+function LanParty({ notify, openProfile, openQueue } {
   return (
     <main className="screen lanScreen">
       <TopBar title="☢ SQUADUP.GG" />
       <section className="lanPanel">
         <p>SQUAD ONLINE</p>
-        <SquadRow />
+        <SquadRow openProfile={openProfile} />
       </section>
       <section className="lanDisplay">
         <h1>WHAT ARE WE<br/>PLAYING TONIGHT?</h1>
@@ -318,7 +381,7 @@ function LanParty({ notify }) {
   );
 }
 
-function MinimalPro({ notify }) {
+function MinimalPro({ notify, openProfile, openQueue }) {
   return (
     <main className="minimalShell">
       <aside className="minimalRail">
@@ -327,13 +390,13 @@ function MinimalPro({ notify }) {
       <section className="minimalMain">
         <TopBar />
         <p>Squad Online</p>
-        <SquadRow compact />
+        <SquadRow compact openProfile={openProfile} />
         <section className="minimalQuestion">
           <div>
             <h1>What should we<br/>play tonight?</h1>
             <p>Smart picks for your squad</p>
           </div>
-          <button onClick={() => notify("Match gevonden")}><ChevronRight /></button>
+          <button onClick={openQueue}><ChevronRight /></button>
         </section>
         <h3>Top Picks</h3>
         <PickList variant="minimalPicks" notify={notify}/>
@@ -342,7 +405,7 @@ function MinimalPro({ notify }) {
   );
 }
 
-function GridCommand({ notify }) {
+function GridCommand({ notify, openProfile, openQueue } {
   return (
     <main className="screen gridScreen">
       <TopBar />
@@ -361,7 +424,7 @@ function GridCommand({ notify }) {
       <section className="mission">
         <h3>MISSION CONTROL</h3>
         <p>What should we play tonight?</p>
-        <button onClick={() => notify("Match analysis gestart")}>FIND MATCH</button>
+        <button onClick={openQueue}>FIND MATCH</button>
       </section>
       <h3>TOP MATCHES</h3>
       <PickList variant="gridPicks" notify={notify}/>
@@ -369,12 +432,12 @@ function GridCommand({ notify }) {
   );
 }
 
-function CarouselFocus({ notify }) {
+function CarouselFocus({ notify, openProfile, openQueue } {
   return (
     <main className="screen carouselScreen">
       <TopBar />
       <p>Squad Online</p>
-      <SquadRow compact />
+      <SquadRow compact openProfile={openProfile} />
       <section className="bigCarousel">
         {picks.slice(0, 4).map((pick, i) => (
           <article key={pick.name} className={i === 0 ? "mainSlide" : ""} style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.78)), url(${pick.art})` }}>
@@ -394,7 +457,7 @@ function CarouselFocus({ notify }) {
   );
 }
 
-function SideNavCommand({ notify }) {
+function SideNavCommand({ notify, openProfile, openQueue } {
   return (
     <main className="sideCommand">
       <aside className="sideNav">
@@ -412,14 +475,14 @@ function SideNavCommand({ notify }) {
         <TopBar title="Dashboard" />
         <section className="sideCard">
           <h3>Squad Online</h3>
-          <SquadRow compact />
+          <SquadRow compact openProfile={openProfile} />
         </section>
         <section className="sideQuestion">
           <div>
             <h2>What should we play tonight?</h2>
             <p>Get smart recommendations.</p>
           </div>
-          <button onClick={() => notify("Recommendations geopend")}><ChevronRight /></button>
+          <button onClick={openQueue}><ChevronRight /></button>
         </section>
         <h3>Tonight's Top Matches</h3>
         <PickList variant="sidePicks" notify={notify}/>
@@ -428,7 +491,7 @@ function SideNavCommand({ notify }) {
   );
 }
 
-function FullImmersion({ notify }) {
+function FullImmersion({ notify, openProfile, openQueue } {
   return (
     <main className="immersionScreen">
       <TopBar />
@@ -437,16 +500,223 @@ function FullImmersion({ notify }) {
           <p>WHAT EPIC ADVENTURE</p>
           <h1>TONIGHT?</h1>
           <span>The squad is ready. The choice is yours.</span>
-          <button onClick={() => notify("Finding your game")}>FIND YOUR GAME</button>
+          <button onClick={openQueue}>FIND YOUR GAME</button>
         </div>
       </section>
       <GameArtWall compact />
       <section className="immersionSquad">
         <h3>SQUAD ONLINE</h3>
-        <SquadRow compact />
+        <SquadRow compact openProfile={openProfile} />
       </section>
     </main>
   );
 }
+
+
+function DesktopCommandCenter({ layout, setLayout, notify, openProfile, openQueue }) {
+  const active = layouts.find(([id]) => id === layout);
+  return (
+    <section className="desktopOnly">
+      <aside className="desktopSidebar">
+        <div className="desktopBrand">
+          <div className="desktopLogo"><Gamepad2 size={24}/></div>
+          <div>
+            <strong>SquadUp<span>.gg</span></strong>
+            <small>v0.23 command center</small>
+          </div>
+        </div>
+
+        <nav className="desktopNav">
+          <button className="active"><Home size={18}/> Dashboard</button>
+          <button><Search size={18}/> Discover</button>
+          <button><Users size={18}/> Squad</button>
+          <button><CalendarDays size={18}/> Planning</button>
+          <button><Trophy size={18}/> Progression</button>
+          <button><Settings size={18}/> Settings</button>
+        </nav>
+
+        <div className="desktopThemeBox">
+          <span>Layout mode</span>
+          <strong>{active?.[1]}</strong>
+          <div className="desktopThemeGrid">
+            {layouts.map(([id, title]) => (
+              <button key={id} className={layout === id ? "active" : ""} onClick={() => setLayout(id)}>{title.replace(/^\d+\.\s/, "")}</button>
+            ))}
+          </div>
+        </div>
+      </aside>
+
+      <main className={`desktopMain desktop-${layout}`}>
+        <header className="desktopHeader">
+          <div>
+            <span>Friday Squad</span>
+            <h1>What are we playing tonight?</h1>
+            <p>Live squad presence, smart picks, instant queue en game discovery in één fullscreen dashboard.</p>
+          </div>
+          <button onClick={openQueue}>🎮 NU een potje?</button>
+        </header>
+
+        <section className="desktopHeroGrid">
+          <article className="desktopCinematicCard" style={{ backgroundImage: `linear-gradient(90deg, rgba(0,0,0,.72), rgba(0,0,0,.15)), url(${picks[0].art})` }}>
+            <div>
+              <span>Best match tonight</span>
+              <h2>{picks[0].name}</h2>
+              <p>{picks[0].desc}</p>
+              <div className="desktopActionRow">
+                <button onClick={() => notify(`${picks[0].name} ingepland`)}>Plan game night</button>
+                <button onClick={openQueue}>Tag squad</button>
+              </div>
+            </div>
+          </article>
+
+          <article className="desktopPresence">
+            <div className="desktopPanelHead">
+              <h3>Squad online</h3>
+              <span>3 online · 2 playing</span>
+            </div>
+            {squad.map(member => (
+              <div className="desktopMember" key={member.name}>
+                <div className="avatar">{member.avatar}</div>
+                <div>
+                  <strong>{member.name}</strong>
+                  <span>{member.status} · {member.game}</span>
+                </div>
+                <button onClick={() => openProfile(member)}>Profile</button>
+              </div>
+            ))}
+          </article>
+        </section>
+
+        <section className="desktopContentGrid">
+          <article className="desktopPanel wide">
+            <div className="desktopPanelHead">
+              <h3>Recommended games</h3>
+              <span>Steam / IGDB ready</span>
+            </div>
+            <div className="desktopGameGrid">
+              {picks.map(game => (
+                <button key={game.name} className="desktopGameCard" onClick={() => notify(`${game.name} geopend`)} style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,.05), rgba(0,0,0,.76)), url(${game.art})` }}>
+                  <strong>{game.name}</strong>
+                  <span>{game.match} · {game.mode}</span>
+                </button>
+              ))}
+            </div>
+          </article>
+
+          <article className="desktopPanel">
+            <div className="desktopPanelHead">
+              <h3>Instant queue</h3>
+              <span>Push-ready concept</span>
+            </div>
+            <div className="queueButtons">
+              <button onClick={() => notify("Quick Match ping verstuurd")}>Quick Match</button>
+              <button onClick={() => notify("Co-op ping verstuurd")}>Co-op PvE</button>
+              <button onClick={() => notify("Competitive ping verstuurd")}>Competitive</button>
+              <button onClick={() => notify("LAN prep ping verstuurd")}>LAN Prep</button>
+            </div>
+          </article>
+
+          <article className="desktopPanel">
+            <div className="desktopPanelHead">
+              <h3>Tonight readiness</h3>
+              <span>Live mock</span>
+            </div>
+            <div className="readinessBig">93%</div>
+            <p>4/5 ready · 3 installed · 2 active now</p>
+          </article>
+        </section>
+      </main>
+    </section>
+  );
+}
+
+
+
+function IntroThemePicker({ setLayout, close }) {
+  return (
+    <div className="overlay">
+      <section className="introModal">
+        <button className="closeButton" onClick={close}><X size={18}/></button>
+        <span>Welcome to SquadUp.gg</span>
+        <h1>Choose your squad vibe</h1>
+        <p>Kies direct de visuele stijl waarmee je de app wilt starten. Je kunt later altijd wisselen.</p>
+        <div className="introChoices">
+          <button onClick={() => { setLayout("immersion"); close(); }}>
+            <div className="introPreview immersionPreview"></div>
+            <strong>Full Immersion</strong>
+            <small>Cinematic, fullscreen, adventure first</small>
+          </button>
+          <button onClick={() => { setLayout("carousel"); close(); }}>
+            <div className="introPreview carouselPreview"></div>
+            <strong>Carousel Focus</strong>
+            <small>Big artwork, media-first discovery</small>
+          </button>
+        </div>
+        <button className="secondaryAction" onClick={close}>Skip for now</button>
+      </section>
+    </div>
+  );
+}
+
+function UserProfileModal({ user, close, notify }) {
+  return (
+    <div className="overlay">
+      <section className="profileModal">
+        <button className="closeButton" onClick={close}><X size={18}/></button>
+        <div className="profileHeader">
+          <div className="modalAvatar">{user.avatar}</div>
+          <div>
+            <span>{user.archetype}</span>
+            <h2>{user.name}</h2>
+            <p>Level {user.level} · {user.availability}</p>
+          </div>
+        </div>
+        <p className="profileBio">{user.bio}</p>
+        <div className="profileStats">
+          <div><strong>{user.game}</strong><span>Currently / last playing</span></div>
+          <div><strong>{user.status}</strong><span>Status</span></div>
+        </div>
+        <div className="badgeLine">
+          {user.badges.map(badge => <span key={badge}>{badge}</span>)}
+        </div>
+        <div className="modalActions">
+          <button onClick={() => notify(`${user.name} uitgenodigd voor party`)}>Invite to party</button>
+          <button onClick={() => notify(`${user.name} getagd voor NU een potje`) }>Tag for queue</button>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function InstantQueueOverlay({ close, notify }) {
+  const [selected, setSelected] = useState(["Kevin", "Tom"]);
+  const toggle = (name) => setSelected(prev => prev.includes(name) ? prev.filter(x => x !== name) : [...prev, name]);
+
+  return (
+    <div className="overlay">
+      <section className="queueModal">
+        <button className="closeButton" onClick={close}><X size={18}/></button>
+        <span>Instant Queue</span>
+        <h1>NU een potje?</h1>
+        <p>Tag squadleden en stuur straks een push notificatie met Join / Maybe / Busy.</p>
+        <div className="queueMoods">
+          {["Quick Match", "Co-op PvE", "Competitive", "Survival", "LAN Prep"].map(mood => <button key={mood}>{mood}</button>)}
+        </div>
+        <h3>Tag spelers</h3>
+        <div className="tagGrid">
+          {squad.map(member => (
+            <button key={member.name} className={selected.includes(member.name) ? "selected" : ""} onClick={() => toggle(member.name)}>
+              <span>{member.avatar}</span>
+              <strong>{member.name}</strong>
+              <small>{member.game}</small>
+            </button>
+          ))}
+        </div>
+        <button className="sendQueue" onClick={() => { notify(`Queue invite naar ${selected.length} spelers`); close(); }}>Send party invite</button>
+      </section>
+    </div>
+  );
+}
+
 
 createRoot(document.getElementById("root")).render(<App />);
