@@ -1,0 +1,17 @@
+SquadUp Voice Arena v0.5.6
+
+Implemented direction:
+- Live Voice Arena layout
+- Central active squad panel
+- HQ avatar presentation
+- Voice pulse rings
+- Quick join party cards
+- Audio settings center
+- Mic input/output selectors
+- Test microphone section
+- Noise suppression toggle
+- Mute/deafen controls
+- Mobile responsive voice layout
+
+This build only targets the Voice module/tab.
+Other pages remain untouched.
